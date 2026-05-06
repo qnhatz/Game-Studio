@@ -1,7 +1,7 @@
 # Art Bible: Flick Duel
 
 *Created: 2026-05-06*
-*Status: In Progress*
+*Status: Complete*
 *Engine: Godot 4.6 | Platform: Web / Browser*
 
 ---
@@ -576,10 +576,187 @@ All identified conflicts between art direction and readability/usability, with b
 
 ## Section 8: Asset Standards
 
-[To be authored]
+### 8.1 Implementation Architecture
+
+All in-game geometry — figures, arena boundaries, UI chrome, trajectory lines — is rendered via **`Line2D` nodes** and **`_draw()` calls**. There are no sprite sheets for drawn geometry. The sole exception is impact splatters and paper-texture overlays, which use **PNG-8 raster assets** (see §8.4).
+
+This distinction is absolute: if an element is a stroke, it is a `Line2D` or `_draw()` primitive. If it is a mark that cannot exist as a vector stroke (e.g., an ink blot with irregular fill), it is a PNG-8 asset.
+
+### 8.2 Color Constants
+
+All palette values are defined once in `src/core/game_constants.gd` and referenced everywhere else. Never define a color inline.
+
+```gdscript
+const INK_BLACK  := Color(0.08, 0.08, 0.10, 1.0)   # #1A1A1A — figures, arena, neutral UI
+const PAPER      := Color(0.97, 0.96, 0.92, 1.0)   # #F5F0E8 — background fill
+const RULE_GREY  := Color(0.78, 0.75, 0.69, 1.0)   # #C8C0B0 — ruled lines, secondary UI
+const INK_BLUE   := Color(0.10, 0.25, 0.72, 1.0)   # #2853A0 — Player 1 ink
+const INK_RED    := Color(0.80, 0.12, 0.12, 1.0)   # #C0282A — Player 2 ink
+```
+
+### 8.3 Line2D Standards
+
+Every `Line2D` node must conform to these properties:
+
+| Property | Value | Rationale |
+|----------|-------|-----------|
+| `width` | `2.0` px | Single ballpoint stroke at 1× scale |
+| `cap_mode` | `LINE_CAP_ROUND` | Pen-tip termination |
+| `joint_mode` | `LINE_JOINT_ROUND` | Smooth direction changes |
+| `antialiased` | `true` | Sub-pixel smoothing at all zoom levels |
+| `default_color` | From `game_constants.gd` | Never inline |
+
+For UI elements at higher hierarchy (section labels, player name plates), width may increase to `3.0` px. Nothing exceeds `4.0` px.
+
+### 8.4 Wobble Standard
+
+Hand-drawn irregularity is **baked at scene-edit time**, not computed per frame.
+
+- Static geometry (arena walls, figure limbs at rest): apply wobble via a `@tool` script using Perlin noise displacement on the `Line2D` point array. Run once at edit time; the result is serialized into the scene file.
+- Runtime-spawned geometry (trajectory lines, hit effects): apply a one-shot displacement function at instantiation. The displacement is fixed for the lifetime of that node — it does not animate.
+- **Never** recalculate wobble in `_process()` or `_physics_process()`.
+
+Maximum wobble amplitude: `±1.5 px` perpendicular to the stroke direction. Beyond this threshold, legibility breaks.
+
+### 8.5 Persistent Trajectory Lines — Draw Call Budget
+
+Persistent ink (shot trajectories that remain on screen across turns) must not accumulate `Line2D` nodes without bound. Use the **SubViewport accumulation canvas** pattern:
+
+1. A `SubViewport` holds all in-flight `Line2D` trajectory nodes.
+2. When a shot resolves, its `Line2D` is rendered into the SubViewport's texture (blit), then the node is freed.
+3. The entire history of resolved trajectories renders as a single `Sprite2D` draw call.
+
+This caps trajectory draw calls at **1** regardless of match length. Trade-off: individual trajectory lines cannot be erased once committed — this is acceptable and thematically appropriate (ink is permanent).
+
+### 8.6 Animation Standards
+
+All figure and UI animation uses **`Tween` + `_draw()` parameters**. `AnimationPlayer` is not used for character or stroke animation.
+
+| Animation Event | Duration | Easing |
+|-----------------|----------|--------|
+| Firing Gesture | 160 ms (80 out / 26 hold / 53 back) | `TRANS_BACK / EASE_OUT` for overshoot snap |
+| Hit Reaction | 130 ms (53 out / 26 hold / 53 back) | `TRANS_ELASTIC / EASE_OUT` for stagger |
+| Disabled Transition | 80 ms (3-frame geometry mutation) | `TRANS_LINEAR` — clinical, not bouncy |
+| Move Action | ~200 px/sec, minimum 200 ms, 2-frame ghost at origin | `TRANS_QUAD / EASE_IN_OUT` |
+
+Tween all float and Vector2 parameters that drive `_draw()` calls. Do not interpolate `Line2D.points` arrays directly — drive a scalar offset and reconstruct the array in `_draw()`.
+
+### 8.7 Font Standards
+
+| Property | Value |
+|----------|-------|
+| Format | OTF |
+| Rendering mode | Bitmap (not SDF) |
+| Import size | Exact display size (no runtime scaling) |
+| Texture filter | Nearest |
+| Anti-aliasing | Off |
+
+The chosen typeface must read as handwritten or stencilled — consistent with the notebook context. It must be legible at `14 px` for body labels and `10 px` for secondary annotations. Do not use SDF mode; the blurring at small sizes contradicts the sharp-ink principle.
+
+### 8.8 PNG-8 Raster Assets (Impact Splatters & Overlays)
+
+Used only for: ink splatter hit effects, paper texture overlay (background), and any mark that requires irregular fill not achievable with strokes alone.
+
+| Property | Requirement |
+|----------|-------------|
+| Color depth | PNG-8 (256-colour palette) |
+| Max dimensions | 128 × 128 px |
+| Transparency | Index 0 is always transparent |
+| Texture filter | Nearest |
+| Mip maps | Off |
+| Palette source | `game_constants.gd` palette only — no custom colours |
+
+Splatters are authored in the attacker's ink color and imported as neutral (grayscale), then tinted at runtime via `modulate` to the correct player color. This ensures a single asset set serves both players.
+
+### 8.9 Naming Conventions
+
+| Asset Type | Convention | Example |
+|------------|------------|---------|
+| GDScript files | `snake_case.gd` matching class name | `flick_trajectory.gd` |
+| Scene files | `PascalCase.tscn` matching root node | `PlayerFigure.tscn` |
+| PNG assets | `snake_case_descriptor.png` | `splatter_small.png` |
+| Constants | `UPPER_SNAKE_CASE` | `INK_BLACK` |
+| Signals | `snake_case` past tense | `shot_fired`, `hit_resolved` |
+| `Line2D` nodes | `PascalCase` describing the stroke | `LeftArm`, `TorsoLine`, `ArenaWallTop` |
+
+### 8.10 Asset Compliance Checklist
+
+Before any asset is committed, verify:
+
+- [ ] All colors sourced from `game_constants.gd` — no inline `Color()` literals
+- [ ] All `Line2D` nodes set to round caps, round joints, `antialiased: true`
+- [ ] Wobble baked at edit time — no per-frame recalculation
+- [ ] Trajectory lines using SubViewport accumulation (not unbounded node spawning)
+- [ ] PNG-8 raster assets within 128 × 128 px, palette-restricted
+- [ ] Fonts in Bitmap mode at exact display size, Nearest filter
+- [ ] Animation durations match §8.6 timing table
+- [ ] No `AnimationPlayer` used for stroke or figure animation
 
 ---
 
 ## Section 9: Reference Direction
 
-[To be authored]
+### Purpose
+
+These five references are not style targets — they are constraints on specific decisions. Each one resolves a design question that would otherwise produce inconsistent results across artists and sessions.
+
+---
+
+### Reference 1: Charles Schulz — *Peanuts* (1950–2000)
+
+**The decision it resolves:** How much do we draw?
+
+Schulz built some of the most emotionally legible characters in the medium using the fewest marks necessary. A raised eyebrow is two curved lines. Grief is a downward arc. He never drew what the reader could infer.
+
+**Applied rule:** Every figure element must justify its presence against Schulz's economy test: *"If I removed this stroke, would the read change?"* If not, remove it. Flick Duel figures are constructed from the minimum viable geometry — the constraint is not a limitation, it is the aesthetic.
+
+---
+
+### Reference 2: *Papers, Please* (Lucas Pope, 2013)
+
+**The decision it resolves:** How does the document surface carry emotional weight?
+
+In *Papers, Please*, paper is not neutral — stamps, smears, and marks accumulate on documents and communicate history. The surface becomes a record of decisions made under pressure.
+
+**Applied rule:** Trajectory lines are permanent. Hit marks do not disappear at turn end. The page accumulates evidence of the match, and a player reading the page midgame can reconstruct every decision. Never clean the canvas between turns; impermanence would contradict the notebook-as-record-keeper principle.
+
+---
+
+### Reference 3: A Physical College-Ruled Notebook
+
+**The decision it resolves:** What is the structural grammar of the playing field?
+
+The reference is not a photograph or an artist's interpretation — it is the object itself. Ruling lines are `#C8C0B0` (`RULE_GREY`), spaced at `24 px` (representing the standard 8.7 mm college rule at the game's internal scale). The margin line is a single vertical stroke in the same color, left of the playing area. The paper color is `#F5F0E8` (`PAPER`), not white.
+
+**Applied rule:** The ruled-line grid is the background, not an overlay. It renders first, below all other elements. Spacing and color must match this reference exactly — any deviation reads as a different paper type (graph paper, legal pad) and breaks the ground truth.
+
+---
+
+### Reference 4: *Superhot* (SUPERHOT Team, 2016)
+
+**The decision it resolves:** How do we maintain visual contrast during live gameplay?
+
+*Superhot* keeps its world legible under extreme action by enforcing a ruthless hierarchy: one dominant value for background, one for environment, one for the player-critical object (the red enemy). Everything else is subordinate.
+
+**Applied rule:** The Flick Duel contrast hierarchy, from most to least prominent:
+1. **Active player's ink color** (the action being taken right now)
+2. **Hit result geometry** (the outcome of the just-resolved shot)
+3. **Player figures** (black ink, always present)
+4. **Arena and UI chrome** (black ink, reduced weight)
+5. **Ruling lines** (grey, lowest weight)
+
+When adding any new visual element, assign it a hierarchy level before determining its color or weight. An element without a hierarchy assignment is not ready to implement.
+
+---
+
+### Reference 5: Ben Shahn — *Love and Joy About Letters* (1963)
+
+**The decision it resolves:** What makes irregularity feel intentional rather than buggy?
+
+Shahn's hand-lettering demonstrates the difference between controlled imperfection (each letter slightly different from its neighbours, but consistent in character and weight) and random noise (inconsistent pressure, wandering baselines, lost stroke endings). The former reads as craftsmanship; the latter reads as error.
+
+**Applied rule:** Wobble parameters (Perlin noise seed, amplitude, frequency) are set once per geometry class and held constant within that class. A figure's left arm has the same wobble character as its right arm. The arena wall's wobble character matches the figure outlines. Imperfection must be *coherent* — a consistent hand, not a random one. Random seeds must be fixed constants, not generated at runtime.
+
+---
+
+*Art Bible complete. Status: Approved for asset production.*
