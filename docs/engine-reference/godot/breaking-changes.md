@@ -1,6 +1,6 @@
 # Godot — Breaking Changes
 
-Last verified: 2026-02-12
+Last verified: 2026-05-06
 
 Changes between Godot versions, focused on post-LLM-cutoff changes (4.4+).
 
@@ -18,6 +18,10 @@ Changes between Godot versions, focused on post-LLM-cutoff changes (4.4+).
 | Editor | New "Modern" theme default | Grayscale replaces blue-tint. Restore: Editor Settings → Interface → Theme → Style: Classic |
 | Editor | "Select Mode" keybind changed | New "Select Mode" (v key) prevents accidental transforms. Old mode renamed "Transform Mode" (q key). |
 | 2D | TileMapLayer scene tile rotation | Scene tiles can now be rotated like atlas tiles. |
+| Animation | `AnimationPlayer` properties now `StringName` | `assigned_animation`, `autoplay`, `current_animation` changed from `String`. Use `StringName` type annotations. `get_queue()` now returns `StringName[]` not `PackedStringArray`. |
+| File | `FileAccess.get_as_text()` | `skip_cr` parameter removed. Remove the argument if you used it. |
+| File | `FileAccess.create_temp()` | `mode` parameter type changed from `int` to `FileAccess.ModeFlags`; integer literals still work. |
+| Shader | GLSL `view_matrix` / `inv_view_matrix` | Changed from `mat4` to `mat3x4` in SceneData. Transpose required. Only affects custom GLSL shaders, not GDShader. |
 | Localization | CSV plural form support | No longer requires Gettext for plurals. Context columns added. |
 | C# | Automatic string extraction | Translation strings auto-extracted from C# code. |
 | Plugins | New EditorDock class | Specialized container for plugin docks with layout control. |
@@ -38,6 +42,9 @@ Changes between Godot versions, focused on post-LLM-cutoff changes (4.4+).
 | Physics | 3D interpolation rearchitected | Moved from RenderingServer to SceneTree. API unchanged but internals differ. |
 | Animation | BoneConstraint3D | New: AimModifier3D, CopyTransformModifier3D, ConvertTransformModifier3D |
 | Resources | `duplicate_deep()` added | New explicit method for deep duplication of nested resources |
+| Node | `get_rpc_config` → `get_node_rpc_config` | **GDScript breaking**: method renamed; only relevant if using multiplayer RPC |
+| TileMapLayer | Physics chunking ON by default | Set `physics_quadrant_size = 1` to restore 4.4 behavior; not relevant for Flick Duel |
+| JSONRPC | `set_scope` → `set_method` | Incompatible rename |
 | Navigation | Dedicated 2D navigation server | No longer a proxy to 3D navigation; smaller export for 2D games |
 | UI | FoldableContainer node | New accordion-style container for collapsible UI sections |
 | UI | Recursive Control behavior | Disable mouse/focus interactions across entire node hierarchies |
@@ -51,6 +58,7 @@ Changes between Godot versions, focused on post-LLM-cutoff changes (4.4+).
 |-----------|--------|---------|
 | Core | `FileAccess.store_*` return `bool` | Was `void`. Methods: `store_8`, `store_16`, `store_32`, `store_64`, `store_buffer`, `store_csv_line`, `store_double`, `store_float`, `store_half`, `store_line`, `store_pascal_string`, `store_real`, `store_string`, `store_var` |
 | Core | `OS.execute_with_pipe` | Added optional `blocking` parameter |
+| Core | `OS.read_string_from_stdin` | **GDScript breaking**: `buffer_size` parameter now required. Use `OS.read_string_from_stdin(1024)`. |
 | Core | `RegEx.compile/create_from_string` | Added optional `show_error` parameter |
 | Rendering | `RenderingDevice.draw_list_begin` | Many parameters removed; `breadcrumb` parameter added |
 | Rendering | Shader texture types | Parameter/return types changed from `Texture2D` to `Texture` |

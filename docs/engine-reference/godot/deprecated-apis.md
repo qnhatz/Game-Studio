@@ -1,6 +1,6 @@
 # Godot — Deprecated APIs
 
-Last verified: 2026-02-12
+Last verified: 2026-05-06
 
 If an agent suggests any API in the "Deprecated" column, it MUST be replaced
 with the "Use Instead" column.
@@ -30,6 +30,11 @@ with the "Use Instead" column.
 | `Skeleton3D` signal `bone_pose_updated` | `skeleton_updated` | 4.3 | Renamed |
 | `AnimationPlayer.method_call_mode` | `AnimationMixer.callback_mode_method` | 4.3 | Moved to base class |
 | `AnimationPlayer.playback_active` | `AnimationMixer.active` | 4.3 | Moved to base class |
+| `AnimationPlayer.get_queue()` (returns `PackedStringArray`) | Use `StringName[]` annotation | 4.6 | Return type changed to `StringName[]` |
+| `Node.get_rpc_config()` | `Node.get_node_rpc_config()` | 4.5 | Renamed — breaking |
+| `JSONRPC.set_scope()` | `JSONRPC.set_method()` | 4.5 | Renamed — breaking |
+| `FileAccess.get_as_text(skip_cr)` | `FileAccess.get_as_text()` | 4.6 | Parameter removed |
+| `OS.read_string_from_stdin()` | `OS.read_string_from_stdin(1024)` | 4.4 | buffer_size now required |
 
 ## Patterns (Not Just APIs)
 
