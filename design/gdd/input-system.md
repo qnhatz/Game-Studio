@@ -1,6 +1,6 @@
 # Input System
 
-> **Status**: In Design
+> **Status**: Designed
 > **Author**: Claude Code + user
 > **Last Updated**: 2026-05-07
 > **Implements Pillar**: Skill Earns the Win / Instant to Learn
@@ -92,18 +92,15 @@ This system has no upstream dependencies. It reads only from hardware input (mou
 | `MIN_POWER` | 0.05 | 0.01–0.15 | Cancellation threshold. Lower = easier to accidentally fire; higher = requires more intentional pull to commit. |
 | `TAP_RADIUS_PX` | 48 px | 32–80 px | Hit area for gesture origin on the figure. Lower = more precise targeting required; higher = more forgiving on mobile. |
 
-## Visual/Audio Requirements
-
-[To be designed]
-
-## UI Requirements
-
-[To be designed]
-
 ## Acceptance Criteria
 
-[To be designed]
+| # | Criterion | How to Verify |
+|---|-----------|---------------|
+| AC1 | A drag starting outside 48px of the figure centre produces no `FlickEvent` | Unit test: simulate pointer-down at 50px from centre → assert no event emitted |
+| AC2 | A drag of exactly 75px produces `power = 0.5` (with `MAX_DRAG_PX = 150`) | Unit test: inject drag vector of length 75 → assert `FlickEvent.power == 0.5` |
+| AC3 | A drag shorter than 7.5px (MIN_POWER threshold) produces no `FlickEvent` | Unit test: inject drag vector of length 7 → assert no event emitted |
+| AC4 | Shot direction is opposite to drag direction (slingshot model) | Unit test: drag right → assert `FlickEvent.direction` points left (negative X) |
+| AC5 | A second touch during an active drag is ignored | Unit test: inject touch-down with a second touch ID mid-drag → assert power/direction unchanged |
+| AC6 | A drag endpoint outside screen bounds is clamped — shot still fires | Unit test: inject drag_endpoint beyond screen rect → assert `FlickEvent` emitted with clamped power |
+| AC7 | Input is silently discarded when the input window is closed | Integration test: simulate gesture-start with window closed → assert no `FlickEvent` emitted |
 
-## Open Questions
-
-[To be designed]
