@@ -33,7 +33,28 @@ The Input System only accepts gesture-start events when the Turn System has open
 
 ## Formulas
 
-[To be designed]
+**F1 — Shot Direction**
+```
+direction = normalize(figure_centre − drag_endpoint)
+```
+- `figure_centre`: Vector2, active player's figure origin in screen coordinates
+- `drag_endpoint`: Vector2, pointer position at release
+- Result: unit Vector2 (length = 1.0)
+
+**F2 — Power**
+```
+power = clamp(|drag_endpoint − figure_centre| / MAX_DRAG_PX, 0.0, 1.0)
+```
+- `MAX_DRAG_PX = 150` px (default)
+- Range: [0.0, 1.0]
+- Example: drag 75px → power = 0.5; drag 200px → power = 1.0 (clamped)
+
+**F3 — Cancellation Threshold**
+```
+cancelled = (power < MIN_POWER)
+MIN_POWER = 0.05
+```
+- Equivalent to a drag shorter than `150 × 0.05 = 7.5 px`
 
 ## Edge Cases
 
