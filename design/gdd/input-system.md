@@ -86,7 +86,11 @@ This system has no upstream dependencies. It reads only from hardware input (mou
 
 ## Tuning Knobs
 
-[To be designed]
+| Knob | Default | Safe Range | Affects |
+|------|---------|------------|---------|
+| `MAX_DRAG_PX` | 150 px | 80–250 px | Maps physical drag distance to power 1.0. Lower = more sensitive (full power on shorter drag); higher = more deliberate effort required. |
+| `MIN_POWER` | 0.05 | 0.01–0.15 | Cancellation threshold. Lower = easier to accidentally fire; higher = requires more intentional pull to commit. |
+| `TAP_RADIUS_PX` | 48 px | 32–80 px | Hit area for gesture origin on the figure. Lower = more precise targeting required; higher = more forgiving on mobile. |
 
 ## Visual/Audio Requirements
 
