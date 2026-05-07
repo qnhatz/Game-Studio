@@ -75,7 +75,14 @@ Treat as a release at the last known pointer position. Emit `FlickEvent` if powe
 
 ## Dependencies
 
-[To be designed]
+| Direction | System | Nature |
+|-----------|--------|--------|
+| Consumed by | Trajectory Visualization | Reads `FlickEvent` continuously during drag to update the live aim line |
+| Consumed by | Shot Spread Calculation | Reads `direction` and `power` from `FlickEvent` at release |
+| Gated by | Two-Action Turn System | Opens and closes the input window; Input System discards gestures when window is closed |
+| Bypassed by | AI Targeting | Synthesizes `FlickEvent` directly — does not interact with this system |
+
+This system has no upstream dependencies. It reads only from hardware input (mouse/touch events).
 
 ## Tuning Knobs
 
