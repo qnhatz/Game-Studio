@@ -11,7 +11,7 @@ The Input System is the first node in the shot pipeline. It converts a mouse dra
 
 ## Player Fantasy
 
-[To be designed]
+The player should feel like a marksman lining up a shot, not a user filling in a form. The drag-back creates physical tension — the longer the pull, the more committed the shot feels. The release is the moment of truth: instantaneous, irreversible, satisfying. A well-aimed flick that clips the head should feel *earned*. A miss that grazes the shoulder should sting. The gesture maps directly to the pen-flick muscle memory players already have — anyone who played the paper version in school recognises it within one turn.
 
 ## Detailed Design
 
