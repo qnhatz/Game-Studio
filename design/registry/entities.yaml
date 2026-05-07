@@ -37,7 +37,7 @@
 #   Each entry: name, status, source, referenced_by[], attributes{}, added, revised
 
 version: 1
-last_updated: ""
+last_updated: "2026-05-06"
 
 # ─── ENTITIES ────────────────────────────────────────────────────────────────
 # Named game-world objects: enemies, NPCs, characters, factions, bosses.
@@ -139,7 +139,56 @@ formulas: []
 #
 # Required fields: name, status, source, referenced_by, value, unit, added
 
-constants: []
+constants:
+  - name: CANVAS_W
+    status: active
+    source: design/gdd/screen-layout.md
+    referenced_by:
+      - design/gdd/screen-layout.md
+    value: 800
+    unit: px
+    added: "2026-05-06"
+    revised: ""
+
+  - name: CANVAS_H
+    status: active
+    source: design/gdd/screen-layout.md
+    referenced_by:
+      - design/gdd/screen-layout.md
+    value: 450
+    unit: px
+    added: "2026-05-06"
+    revised: ""
+
+  - name: HUD_H
+    status: active
+    source: design/gdd/screen-layout.md
+    referenced_by:
+      - design/gdd/screen-layout.md
+    value: 90
+    unit: px
+    added: "2026-05-06"
+    revised: ""
+
+  - name: P1_ANCHOR
+    status: active
+    source: design/gdd/screen-layout.md
+    referenced_by:
+      - design/gdd/screen-layout.md
+    value: "Vector2(200, 338)"
+    unit: px
+    added: "2026-05-06"
+    revised: ""
+
+  - name: P2_ANCHOR
+    status: active
+    source: design/gdd/screen-layout.md
+    referenced_by:
+      - design/gdd/screen-layout.md
+    value: "Vector2(600, 338)"
+    unit: px
+    added: "2026-05-06"
+    revised: ""
 
 # Example:
 #
