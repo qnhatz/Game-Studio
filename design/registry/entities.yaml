@@ -37,7 +37,7 @@
 #   Each entry: name, status, source, referenced_by[], attributes{}, added, revised
 
 version: 1
-last_updated: "2026-05-06"
+last_updated: "2026-05-07"
 
 # ─── ENTITIES ────────────────────────────────────────────────────────────────
 # Named game-world objects: enemies, NPCs, characters, factions, bosses.
@@ -188,6 +188,17 @@ constants:
     value: "Vector2(600, 338)"
     unit: px
     added: "2026-05-06"
+    revised: ""
+
+  - name: EFFECT_DURATION_TURNS
+    status: active
+    source: design/gdd/status-effects.md
+    referenced_by:
+      - design/gdd/status-effects.md
+    value: 1
+    unit: turns
+    notes: "Implementation uses counter_initial = duration_turns * 2 (counter=2 for 1 turn). See Tuning Knobs section in source GDD."
+    added: "2026-05-07"
     revised: ""
 
 # Example:

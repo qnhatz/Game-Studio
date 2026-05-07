@@ -18,7 +18,7 @@ Flick Duel is a mechanically compact 1v1 dueling game. Its systems decompose int
 | # | System Name | Category | Priority | Status | Design Doc | Depends On |
 |---|-------------|----------|----------|--------|------------|------------|
 | 1 | Screen Layout | Core Gameplay | MVP | Designed | design/gdd/screen-layout.md | — |
-| 2 | Status Effects | Core Gameplay | MVP | Not Started | — | — |
+| 2 | Status Effects | Core Gameplay | MVP | Designed | design/gdd/status-effects.md | — |
 | 3 | Input System | Core Gameplay | MVP | Not Started | — | — |
 | 4 | Shot Spread Calculation | Core Gameplay | MVP | Not Started | — | — |
 | 5 | Figure Geometry | Core Gameplay | MVP | Not Started | — | Screen Layout |
@@ -146,10 +146,10 @@ Systems at the same layer with no inter-dependencies (e.g., Screen Layout, Statu
 | Metric | Count |
 |--------|-------|
 | Total systems identified | 18 |
-| Design docs started | 1 |
+| Design docs started | 2 |
 | Design docs reviewed | 0 |
 | Design docs approved | 0 |
-| MVP systems designed | 1 / 17 |
+| MVP systems designed | 2 / 17 |
 | V1.0 systems designed | 0 / 1 |
 
 ---

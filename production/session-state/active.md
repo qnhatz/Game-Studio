@@ -1,10 +1,10 @@
 # Session State — Flick Duel
 
-*Last updated: 2026-05-06*
+*Last updated: 2026-05-07*
 
 ## Current Task
 
-Screen Layout GDD complete. Ready for next system.
+Status Effects GDD complete. Ready to begin GDD #3 — Input System.
 
 ## Status
 
@@ -13,15 +13,16 @@ Screen Layout GDD complete. Ready for next system.
 - [x] Art bible authored — `design/art/art-bible.md` (all 9 sections)
 - [x] Systems index created — `design/gdd/systems-index.md` (18 systems, 17 MVP)
 - [x] Screen Layout GDD — `design/gdd/screen-layout.md` (all sections, Designed)
-- [ ] Individual GDDs — 1 / 18 authored
+- [x] Status Effects GDD — `design/gdd/status-effects.md` (all sections, Designed)
+- [ ] Individual GDDs — 2 / 18 authored
 
 ## Active File
 
-`design/gdd/systems-index.md`
+`design/gdd/status-effects.md` (complete — next: `design/gdd/input-system.md`)
 
 ## Next Action
 
-Run `/design-system status-effects` — next in design order (#2, Foundation, no dependencies, small effort).
+Run `/design-system input-system` — #3 in design order (Foundation, no dependencies, medium effort).
 
 ## Key Decisions
 
@@ -31,25 +32,19 @@ Run `/design-system status-effects` — next in design order (#2, Foundation, no
 - HUD strip: y 0–90 px
 - Gesture regions exclude HUD strip; ownership by drag origin
 - Portrait blocked (strict V_w < V_h)
-- 5 constants registered in entities.yaml
+- 5 layout constants + EFFECT_DURATION_TURNS registered in entities.yaml
+
+### Status Effects key decisions
+- Tick model: counter=2, tick at turn START before action validation
+- counter=2 for 1 restricted turn (counter_initial = duration_turns × 2)
+- Both flags false + counter=2 both → auto-skip turn on tick (2→1, both still false)
+- Staggered counters → no auto-skip; restrictions expire independently
+- `set_disarmed` on already-disarmed player resets counter to 2 (idempotent)
+- Only writer: Body-Zone Hit Detection; only ticker: Turn System
+- Open questions: system architecture location (ADR); auto-skip indicator owner
 
 <!-- STATUS -->
 Epic: Pre-Production
 Feature: Systems Design
-Task: Design individual GDDs (1/18)
-<!-- /STATUS -->
-
-Or run `/map-systems next` to auto-select the next undesigned system.
-
-## Key Decisions Made
-
-- 18 systems total (17 MVP, 1 V1.0)
-- Design order follows dependency layers (Foundation → Core → Feature → Feature+ → Presentation)
-- High-risk: Figure Geometry (zone sizing), Input System (gesture feel on glass), AI Targeting (believability)
-- No circular dependencies
-
-<!-- STATUS -->
-Epic: Pre-Production
-Feature: Systems Design
-Task: Design individual GDDs
+Task: Design individual GDDs (2/18)
 <!-- /STATUS -->
