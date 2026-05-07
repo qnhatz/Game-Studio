@@ -58,7 +58,20 @@ MIN_POWER = 0.05
 
 ## Edge Cases
 
-[To be designed]
+**EC1 — Drag starts on figure, pointer leaves play area**
+Clamp `drag_endpoint` to the screen bounds before computing direction and power. The shot still fires on release; it does not cancel.
+
+**EC2 — Player taps the figure without dragging (power = 0)**
+Caught by the cancellation threshold (F3). No `FlickEvent` emitted, no action consumed.
+
+**EC3 — Both players' figures overlap (crowded screen)**
+Gesture origin is attributed to the *active* player only. The inactive player's figure hit area is ignored for input purposes during the opponent's turn.
+
+**EC4 — Multi-touch: second finger touches screen mid-drag**
+First active touch ID owns the drag. Subsequent touch events are ignored until the owning touch is released or cancelled.
+
+**EC5 — Pointer released outside browser window (focus lost)**
+Treat as a release at the last known pointer position. Emit `FlickEvent` if power ≥ MIN_POWER, cancel otherwise.
 
 ## Dependencies
 
