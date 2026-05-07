@@ -7,7 +7,7 @@
 
 ## Overview
 
-[To be designed]
+The Input System is the first node in the shot pipeline. It converts a mouse drag or touch drag gesture into a structured `FlickEvent` — a value object containing aim direction (angle in radians), pull distance (normalized 0–1 power), and a timestamp. Every downstream system that needs shot data reads from this event: Trajectory Visualization reads it live during the drag to draw the aim line; Shot Spread Calculation reads direction and power at release to compute angular variance. The AI bypasses this system entirely and synthesizes its own `FlickEvent` directly. The Input System makes no gameplay decisions — it is pure input translation.
 
 ## Player Fantasy
 
