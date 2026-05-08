@@ -42,7 +42,37 @@ Both figures use identical geometry. P2's figure is a horizontal mirror of P1's 
 
 ## Formulas
 
-[To be designed]
+**F1 — Zone Boundaries in Screen Space**
+```
+head_centre   = anchor + Vector2(0, −162)
+head_radius   = 18
+
+arms_rect     = Rect2(anchor.x − 40, anchor.y − 126, 80, 36)
+legs_rect     = Rect2(anchor.x − 18, anchor.y − 72,  36, 72)
+```
+
+**F2 — Ray vs Circle (Head)**
+```
+# Ray: origin point O, unit direction D
+# Circle: centre C, radius r
+OC = C − O
+t  = dot(OC, D)
+d² = dot(OC, OC) − t²
+hit = (d² ≤ r²)
+```
+- `t` = projection of OC onto ray; `d²` = squared perpendicular distance
+- Returns true if the closest point on the ray to C is within radius
+
+**F3 — Ray vs Rectangle (Arms / Legs)**
+```
+# Ray: origin O, unit direction D, max_length L (canvas diagonal ≈ 922 px)
+# Rect: position (rx, ry), size (rw, rh)
+t_min = max((rx      − O.x) / D.x,  (ry      − O.y) / D.y)
+t_max = min((rx + rw − O.x) / D.x,  (ry + rh − O.y) / D.y)
+hit = (t_min ≤ t_max) AND (t_max ≥ 0) AND (t_min ≤ L)
+```
+- Standard slab method for AABB ray intersection
+- Handle D.x = 0 or D.y = 0 by substituting ±∞ for the corresponding t terms
 
 ## Edge Cases
 
