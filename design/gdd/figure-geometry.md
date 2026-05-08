@@ -1,6 +1,6 @@
 # Figure Geometry
 
-> **Status**: In Design
+> **Status**: Designed
 > **Author**: Claude Code + user
 > **Last Updated**: 2026-05-08
 > **Implements Pillar**: Skill Earns the Win / Read Your Opponent
@@ -117,4 +117,16 @@ This system has no other upstream dependencies. It defines constants derived fro
 
 ## Acceptance Criteria
 
-[To be designed]
+| # | Criterion | How to Verify |
+|---|-----------|---------------|
+| AC1 | Head centre in screen space = anchor + (0, −162) | Unit test: call `get_head_centre(anchor)` → assert result == anchor + Vector2(0, -162) |
+| AC2 | Arms rect in screen space = Rect2(anchor.x−40, anchor.y−126, 80, 36) | Unit test: call `get_arms_rect(anchor)` → assert expected Rect2 |
+| AC3 | Legs rect in screen space = Rect2(anchor.x−18, anchor.y−72, 36, 72) | Unit test: call `get_legs_rect(anchor)` → assert expected Rect2 |
+| AC4 | Ray aimed directly at head centre returns Head hit | Unit test: ray from (0, 338) toward head_centre → assert zone == HEAD |
+| AC5 | Ray aimed at neck offset (0, −135) returns miss | Unit test: ray from (0, 338) toward anchor+(0,−135) → assert no hit |
+| AC6 | Ray aimed at arms centre returns Arms hit | Unit test: ray toward arms rect centre → assert zone == ARMS |
+| AC7 | Ray aimed at mid-torso offset (0, −81) returns miss | Unit test: ray toward anchor+(0,−81) → assert no hit |
+| AC8 | Ray aimed at legs centre returns Legs hit | Unit test: ray toward legs rect centre → assert zone == LEGS |
+| AC9 | Horizontal ray (D.y = 0) does not crash on arms/legs rect test | Unit test: call F3 with D=Vector2(1,0) → assert no division-by-zero error |
+| AC10 | Head top (anchor.y − 180) is at least 68 px below HUD strip bottom (y=90) | Unit test: assert (338 − 180) = 158 ≥ (90 + 68) = 158 — passes exactly |
+| AC11 | Hit zones do not overlap | Unit test: assert head circle and arms rect have zero intersection; arms rect and legs rect have zero intersection |
