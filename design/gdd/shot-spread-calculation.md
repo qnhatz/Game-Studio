@@ -33,7 +33,35 @@ Called once per shot at release time, after `FlickEvent` is emitted and before t
 
 ## Formulas
 
-[To be designed]
+**F1 — Spread Half-Angle**
+```
+half_angle = MIN_SPREAD_DEG + power × (MAX_SPREAD_DEG − MIN_SPREAD_DEG)
+```
+- `MIN_SPREAD_DEG = 2.0`
+- `MAX_SPREAD_DEG = 30.0`
+- Range: [2°, 30°]
+- Example: power = 0.5 → half_angle = 2 + 0.5 × 28 = 16°
+
+**F2 — Random Offset (Triangular Distribution)**
+```
+u1 = rand()   # uniform [0, 1)
+u2 = rand()   # uniform [0, 1)
+offset_deg = (u1 − u2) × half_angle
+```
+- `(u1 − u2)` produces a triangular distribution on [−1, 1] centred at 0
+- Result: `offset_deg` ∈ [−half_angle, +half_angle], weighted toward 0
+- Example: half_angle = 16°, u1=0.7, u2=0.3 → offset = 0.4 × 16 = +6.4°
+
+**F3 — Resolved Direction**
+```
+offset_rad = offset_deg × (π / 180)
+resolved = Vector2(
+    direction.x × cos(offset_rad) − direction.y × sin(offset_rad),
+    direction.x × sin(offset_rad) + direction.y × cos(offset_rad)
+)
+```
+- Standard 2D rotation matrix applied to the aimed direction unit vector
+- Result: unit Vector2 rotated by `offset_deg` from `direction`
 
 ## Edge Cases
 
