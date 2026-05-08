@@ -15,7 +15,30 @@ The stick figure is a target, and reading it is the skill. The head is small and
 
 ## Detailed Rules
 
-[To be designed]
+**Figure Anchor**
+All figure geometry is expressed relative to the figure's anchor point (foot/root position). In screen space: P1 anchor = Vector2(200, 338), P2 anchor = Vector2(600, 338), sourced from Screen Layout. Y increases downward.
+
+**Figure Proportions**
+Total figure height: 180 px. All dimensions below are anchor-relative (offset from anchor).
+
+**Hit Zones**
+
+| Zone | Shape | Anchor-relative centre | Dimensions | Effect on hit |
+|------|-------|----------------------|------------|---------------|
+| Head | Circle | (0, −162) | radius 18 px | Instant win |
+| Arms | Rectangle | (0, −108) | 80 × 36 px | Disarmed |
+| Legs | Rectangle | (0, −36) | 36 × 72 px | Immobilized |
+
+**Miss Areas**
+Shots that strike outside all three zones are misses — no status effect is applied and no win condition is triggered. Two explicit miss corridors exist within the figure silhouette:
+- Neck: y offset −144 to −126 (18 px)
+- Mid-torso: y offset −90 to −72 (18 px)
+
+**Zone Non-Overlap**
+Hit zones do not overlap. If a shot line intersects multiple zones (geometrically impossible with non-overlapping layout, but guarded against), the highest-priority zone wins: Head > Arms > Legs.
+
+**Orientation**
+Both figures use identical geometry. P2's figure is a horizontal mirror of P1's for visual rendering only — the hit zone boundaries are symmetric and use the same anchor-relative offsets.
 
 ## Formulas
 
