@@ -30,7 +30,7 @@ Flick Duel is a mechanically compact 1v1 dueling game. Its systems decompose int
 | 11 | Game Mode Manager *(inferred)* | Game Flow | MVP | Designed | design/gdd/game-mode-manager.md | Two-Action Turn System |
 | 12 | Game State Machine *(inferred)* | Game Flow | MVP | Designed | design/gdd/game-state-machine.md | Win Condition, Game Mode Manager |
 | 13 | Main Menu *(inferred)* | Game Flow | MVP | Designed | design/gdd/main-menu.md | Game State Machine |
-| 14 | AI Targeting | AI | MVP | Not Started | — | Figure Geometry, Game Mode Manager |
+| 14 | AI Targeting | AI | MVP | Designed | design/gdd/ai-targeting.md | Figure Geometry, Game Mode Manager |
 | 15 | AI Difficulty Config *(inferred)* | AI | MVP | Not Started | — | AI Targeting |
 | 16 | Figure Renderer *(inferred)* | Presentation | MVP | Not Started | — | Figure Geometry, Status Effects |
 | 17 | HUD / Turn Indicator *(inferred)* | Presentation | MVP | Not Started | — | Two-Action Turn System, Status Effects |
