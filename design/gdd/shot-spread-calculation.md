@@ -1,6 +1,6 @@
 # Shot Spread Calculation
 
-> **Status**: In Design
+> **Status**: Designed
 > **Author**: Claude Code + user
 > **Last Updated**: 2026-05-08
 > **Implements Pillar**: Skill Earns the Win / Risk vs Reward
@@ -97,4 +97,12 @@ This system has no upstream dependencies beyond the `FlickEvent` data structure.
 
 ## Acceptance Criteria
 
-[To be designed]
+| # | Criterion | How to Verify |
+|---|-----------|---------------|
+| AC1 | power = 0.0 produces half_angle = 2° | Unit test: call F1 with power=0.0 → assert half_angle == 2.0 |
+| AC2 | power = 1.0 produces half_angle = 30° | Unit test: call F1 with power=1.0 → assert half_angle == 30.0 |
+| AC3 | power = 0.5 produces half_angle = 16° | Unit test: call F1 with power=0.5 → assert half_angle == 16.0 |
+| AC4 | Resolved direction is never outside the spread cone | Unit test: run F2+F3 1000 times with power=1.0, seed fixed → assert all offsets ∈ [−30°, +30°] |
+| AC5 | Resolved direction is a unit vector (length = 1.0) | Unit test: assert `resolved.length()` ≈ 1.0 (within float epsilon) for 100 random inputs |
+| AC6 | Zero-vector input returns Vector2(1, 0) and logs an error | Unit test: call with direction=Vector2(0,0) → assert return value == Vector2(1,0) and error logged |
+| AC7 | Seeded RNG produces identical output on repeated calls | Unit test: call twice with same seed, same inputs → assert resolved directions are equal |
