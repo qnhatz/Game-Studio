@@ -93,7 +93,14 @@ A figure with the Immobilized status effect cannot move, but its legs zone remai
 
 ## Dependencies
 
-[To be designed]
+| Direction | System | Nature |
+|-----------|--------|--------|
+| Depends on | Screen Layout | Reads `P1_ANCHOR`, `P2_ANCHOR` — all zone positions are computed from these |
+| Consumed by | Body-Zone Hit Detection | Uses F1–F3 to test shot rays against zone boundaries |
+| Consumed by | Figure Renderer | Uses F1 zone positions to draw the stick figure and visual hit zone overlays |
+| Consumed by | AI Targeting | Uses head/arms/legs screen-space positions to select aim targets |
+
+This system has no other upstream dependencies. It defines constants derived from Screen Layout anchors — it does not read from any runtime game state.
 
 ## Tuning Knobs
 
