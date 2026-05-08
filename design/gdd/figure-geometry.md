@@ -76,7 +76,20 @@ hit = (t_min ≤ t_max) AND (t_max ≥ 0) AND (t_min ≤ L)
 
 ## Edge Cases
 
-[To be designed]
+**EC1 — Ray direction is axis-aligned (D.x = 0 or D.y = 0)**
+In F3, a zero component produces division by zero. Substitute +∞ when `D.x = 0` and the ray travels parallel to the rectangle's X slabs (no intersection on that axis), or −∞ / +∞ as appropriate per standard slab convention. Godot's `INF` constant handles this directly.
+
+**EC2 — Shot origin is inside a hit zone**
+Geometrically impossible during normal play — shots originate from the firing player's figure and travel toward the opponent. If it occurs (e.g. figures overlapping during a move action), treat as a hit on the innermost zone using the priority order Head > Arms > Legs.
+
+**EC3 — Figure anchor is at the zone boundary of the canvas**
+At anchor y=338, the head top sits at y=158. The HUD strip ends at y=90. Minimum clearance is 68 px — no zone clips the HUD. If `ANCHOR_Y` is tuned, verify `ANCHOR_Y − FIGURE_HEIGHT ≥ HUD_H + margin` (see Tuning Knobs).
+
+**EC4 — P2 figure mirroring affects rendering but not hit zones**
+P2's figure is visually mirrored (arm drawn on the left instead of right), but hit zone rectangles use identical anchor-relative offsets for both players. The renderer mirrors the sprite; the hit zone data does not change.
+
+**EC5 — Immobilized figure: legs zone still exists**
+A figure with the Immobilized status effect cannot move, but its legs zone remains a valid hit target. Hitting an already-immobilized figure's legs is a valid shot that produces no additional effect (already handled by Status Effects GDD).
 
 ## Dependencies
 
