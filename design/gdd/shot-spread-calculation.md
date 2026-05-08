@@ -15,7 +15,21 @@ Power is a double-edged sword. A full-force flick feels explosive — but the sh
 
 ## Detailed Rules
 
-[To be designed]
+**Spread Angle**
+Spread is expressed as a half-angle — the maximum angular offset from the aimed direction on either side.
+
+- At `power = 0.0`: half-angle = `MIN_SPREAD_DEG = 2°`
+- At `power = 1.0`: half-angle = `MAX_SPREAD_DEG = 30°`
+- Spread scales linearly between the two (see Formulas §4)
+
+**Distribution**
+The random offset is drawn from a triangular distribution centred at 0° — most shots land near the aimed direction, with probability decreasing toward the cone edges. This avoids perfectly centred shots while keeping extreme outliers rare.
+
+**Output**
+The system returns a single unit Vector2: the resolved shot direction after the random offset is applied. Callers see one direction — the randomisation is fully encapsulated here.
+
+**Invocation**
+Called once per shot at release time, after `FlickEvent` is emitted and before the shot line is drawn or hit detection runs. The AI uses the same function when resolving its synthesized `FlickEvent`.
 
 ## Formulas
 
