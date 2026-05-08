@@ -79,7 +79,14 @@ The random number generator must accept an optional seed. When the AI synthesize
 
 ## Dependencies
 
-[To be designed]
+| Direction | System | Nature |
+|-----------|--------|--------|
+| Consumes | Input System | Reads `direction` and `power` from `FlickEvent` at shot resolution |
+| Consumed by | Trajectory Visualization | Receives resolved direction to draw the final shot line |
+| Consumed by | Body-Zone Hit Detection | Receives resolved direction to test against figure hit zones |
+| Consumed by | AI Targeting | Calls this function with a seeded RNG when resolving AI shots |
+
+This system has no upstream dependencies beyond the `FlickEvent` data structure. It contains no state and holds no references to other systems — callers pass values in and receive a Vector2 out.
 
 ## Tuning Knobs
 
