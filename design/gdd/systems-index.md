@@ -23,7 +23,7 @@ Flick Duel is a mechanically compact 1v1 dueling game. Its systems decompose int
 | 4 | Shot Spread Calculation | Core Gameplay | MVP | Designed | design/gdd/shot-spread-calculation.md | — |
 | 5 | Figure Geometry | Core Gameplay | MVP | Designed | design/gdd/figure-geometry.md | Screen Layout |
 | 6 | Action Validation *(inferred)* | Core Gameplay | MVP | Designed | design/gdd/action-validation.md | Status Effects |
-| 7 | Trajectory Visualization *(inferred)* | Core Gameplay | MVP | Not Started | — | Input System, Screen Layout |
+| 7 | Trajectory Visualization *(inferred)* | Core Gameplay | MVP | Designed | design/gdd/trajectory-visualization.md | Input System, Screen Layout |
 | 8 | Body-Zone Hit Detection | Core Gameplay | MVP | Not Started | — | Figure Geometry |
 | 9 | Two-Action Turn System | Core Gameplay | MVP | Designed | design/gdd/two-action-turn-system.md | Action Validation, Status Effects |
 | 10 | Win Condition | Core Gameplay | MVP | Not Started | — | Body-Zone Hit Detection |
