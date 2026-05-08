@@ -104,7 +104,16 @@ This system has no other upstream dependencies. It defines constants derived fro
 
 ## Tuning Knobs
 
-[To be designed]
+| Knob | Default | Safe Range | Affects |
+|------|---------|------------|---------|
+| `FIGURE_HEIGHT` | 180 px | 140–220 px | Overall figure scale. Lower = harder to hit all zones; higher = zones feel generous. Must keep head top ≥ 68 px below HUD strip. |
+| `HEAD_RADIUS` | 18 px | 12–26 px | Head zone difficulty. Lower = kill shot is extremely demanding; higher = head is too easy a target. |
+| `ARMS_WIDTH` | 80 px | 60–100 px | Arms zone width. Primary "safe" target — wider makes disarm more reliable. |
+| `ARMS_HEIGHT` | 36 px | 24–48 px | Arms zone height. Affects how tight vertical aim must be for an arm hit. |
+| `LEGS_WIDTH` | 36 px | 24–50 px | Legs zone width. Narrower than arms to make immobilize slightly harder than disarm. |
+| `LEGS_HEIGHT` | 72 px | 50–90 px | Legs zone height. Tall zone compensates for legs sitting low — easier to graze. |
+
+**Constraint**: `HEAD_OFFSET_Y + HEAD_RADIUS + NECK_GAP + ARMS_HEIGHT + TORSO_GAP + LEGS_HEIGHT = FIGURE_HEIGHT`. If any dimension is tuned, verify the sum still equals `FIGURE_HEIGHT` or adjust gaps proportionally.
 
 ## Acceptance Criteria
 
