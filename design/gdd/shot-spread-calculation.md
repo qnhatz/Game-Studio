@@ -65,7 +65,17 @@ resolved = Vector2(
 
 ## Edge Cases
 
-[To be designed]
+**EC1 — power = 0.0 (minimum drag, not cancelled)**
+half_angle = MIN_SPREAD_DEG = 2°. A tiny offset is still applied — no shot is perfectly centred. Prevents degenerate "laser" shots at minimum power.
+
+**EC2 — power = 1.0 (maximum drag)**
+half_angle = MAX_SPREAD_DEG = 30°. Offset is clamped — power cannot exceed 1.0 (enforced by Input System), so spread cannot exceed 30°.
+
+**EC3 — direction = Vector2(0, 0) (zero-length input)**
+Should never occur — the Input System only emits a `FlickEvent` when power ≥ MIN_POWER, which guarantees a non-zero drag vector. If somehow reached, return `Vector2(1, 0)` as a safe fallback and log an error.
+
+**EC4 — Seeded RNG for replay / AI determinism**
+The random number generator must accept an optional seed. When the AI synthesizes a `FlickEvent`, it passes a deterministic seed so AI shots are reproducible across runs. Human shots use the default unseeded RNG.
 
 ## Dependencies
 
