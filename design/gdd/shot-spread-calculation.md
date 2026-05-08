@@ -90,7 +90,10 @@ This system has no upstream dependencies beyond the `FlickEvent` data structure.
 
 ## Tuning Knobs
 
-[To be designed]
+| Knob | Default | Safe Range | Affects |
+|------|---------|------------|---------|
+| `MIN_SPREAD_DEG` | 2.0° | 0°–10° | Minimum spread at lowest power. Higher = even careful shots have variance; lower = near-laser at minimum pull. |
+| `MAX_SPREAD_DEG` | 30.0° | 15°–45° | Maximum spread at full power. Higher = full-power shots are very risky; lower = reduces punishment for hard flicks. |
 
 ## Acceptance Criteria
 
