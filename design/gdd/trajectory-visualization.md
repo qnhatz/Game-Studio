@@ -82,6 +82,9 @@ Clamp `aim_endpoint` to canvas bounds. The aim line never renders outside the lo
 **EC5 — Active player switches mid-fade (opponent's shot line still visible)**
 Shot lines are owned by their firing player's colour. P1's blue lines and P2's red lines may be fading simultaneously. No visual conflict — colour differentiates ownership.
 
+**EC6 — Match ends while shot lines are still visible**
+On receiving the match-end signal, all active shot line timers are frozen at their current state. No further fade or removal occurs until `reset()` is called. The winning shot line remains fully visible beneath the result screen overlay for as long as it is displayed. Shot lines do not tick during the match-end or rematch-confirm states.
+
 ## Dependencies
 
 | Direction | System | Nature |
@@ -102,6 +105,19 @@ This system writes only to the renderer. It reads data but modifies no game stat
 | `SHOT_LINE_DISPLAY_MS` | 2000 ms | 1000–4000 ms | How long shot line stays fully opaque. Shorter = less clutter; longer = more readable evidence of past shots. |
 | `SHOT_LINE_FADE_MS` | 600 ms | 200–1200 ms | Fade-out duration. Shorter = abrupt disappearance; longer = smoother but more visual noise. |
 | `MAX_VISIBLE_SHOT_LINES` | 6 | 2–10 | Maximum simultaneous fading shot lines. Cap prevents visual clutter in long matches. Oldest lines are removed first if cap is exceeded. |
+
+**Reset**
+
+```
+reset():
+    # Remove all active shot lines from scene
+    # Unfreeze timers (no-op if not frozen)
+    # Hide aim line
+    # Post-condition: no shot lines or aim lines are visible; system is ready for a new match
+    shot_lines.clear()
+    aim_line.hide()
+    frozen = false
+```
 
 ## Acceptance Criteria
 

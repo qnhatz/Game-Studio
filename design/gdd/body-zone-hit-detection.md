@@ -63,15 +63,16 @@ rect_hit = (t_min ≤ t_max) AND (t_max ≥ 0)
 **F3 — Resolution**
 ```
 detect(ray_origin, ray_direction, target_player_id):
-    anchor = get_anchor(target_player_id)
-    if ray_vs_circle(ray_origin, ray_direction, anchor + (0,−162), 18):
+    head = figure_geometry.get_zone_circle(target_player_id)
+    if ray_vs_circle(ray_origin, ray_direction, head.centre, head.radius):
         return HEAD
-    if ray_vs_rect(ray_origin, ray_direction, arms_rect(anchor)):
+    if ray_vs_rect(ray_origin, ray_direction, figure_geometry.get_zone_rect(target_player_id, ARMS)):
         return ARMS
-    if ray_vs_rect(ray_origin, ray_direction, legs_rect(anchor)):
+    if ray_vs_rect(ray_origin, ray_direction, figure_geometry.get_zone_rect(target_player_id, LEGS)):
         return LEGS
     return MISS
 ```
+All zone geometry is sourced from Figure Geometry via its accessor methods. No zone values are hardcoded here.
 
 ## Edge Cases
 
@@ -97,9 +98,10 @@ HEAD result is returned immediately. Win Condition fires. Status effects on the 
 | Depends on | Figure Geometry | Reads zone boundaries (head circle, arms rect, legs rect) per target player anchor |
 | Depends on | Shot Spread Calculation | Receives resolved ray direction as input |
 | Depends on | Screen Layout | Reads firing player's anchor as ray origin |
-| Writes to | Status Effects | Calls `set_disarmed` or `set_immobilized` on zone hit |
-| Signals | Win Condition | Returns `HEAD` result; Win Condition system acts on it |
+| Writes to | Status Effects | Calls `set_disarmed` or `set_immobilized` on ARMS/LEGS hit |
+| Returns to | Two-Action Turn System | Returns zone hit result (`HEAD`, `ARMS`, `LEGS`, `MISS`) as return value; Turn System passes this plus `firing_player_id` to Win Condition |
 | Called by | Two-Action Turn System | Invoked after each FIRE action resolves |
+| Consumed by | Figure Renderer | Receives hit zone result to trigger flash effect |
 
 ## Tuning Knobs
 

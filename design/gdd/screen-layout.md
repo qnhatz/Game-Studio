@@ -92,6 +92,11 @@ CORRIDOR  = Rect2(320,   0, 160, 450)
 P1_ANCHOR = Vector2(200, 338)
 P2_ANCHOR = Vector2(600, 338)
 
+# HUD cell rects (x, y, width, height)
+P1_HUD_RECT       = Rect2(  0,   0, 320, 90)
+P2_HUD_RECT       = Rect2(480,   0, 320, 90)
+TURN_INDICATOR_RECT = Rect2(280, 0, 240, 90)  # overlaps inner 40 px of each HUD cell
+
 # Orientation gate (boolean — suspend input when true)
 portrait_blocked = (V_w < V_h)
 ```

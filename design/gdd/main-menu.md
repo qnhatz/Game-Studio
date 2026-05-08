@@ -17,10 +17,20 @@ You open the game and the notebook page is already there. The title is written i
 
 **Buttons**
 Two buttons, vertically stacked at canvas centre:
-1. **"2 Players"** — emits `mode_selected(TWO_PLAYER_LOCAL)`
-2. **"vs Computer"** — emits `mode_selected(ONE_PLAYER_VS_AI)`
+1. **"2 Players"** — emits `mode_selected(TWO_PLAYER_LOCAL)` immediately on tap
+2. **"vs Computer"** — opens the difficulty selector inline (see below)
 
 No other interactive elements in MVP. No settings, no how-to-play, no credits.
+
+**Difficulty Selector**
+Tapping "vs Computer" reveals a 3-option inline selector below the button:
+- **Easy** / **Medium** / **Hard** — horizontally arranged, `DIFFICULTY_BUTTON_W` each
+- Default pre-selected option: **Medium** (highlighted on appear)
+- Tapping a difficulty option emits `difficulty_selected(level)` followed immediately by `mode_selected(ONE_PLAYER_VS_AI)` and hides the selector
+- The "vs Computer" button is disabled while the selector is visible (prevents reopening)
+- Both the selector and main buttons are hidden when `mode_selected` fires
+
+The selector appears with no animation — it renders on the frame the tap is processed.
 
 **Visibility**
 Shown on game load and whenever the Game State Machine transitions to `MENU` state. Hidden when a match begins.
@@ -41,17 +51,29 @@ No math. Complete interaction logic:
 ```
 on_button_tapped(button_id):
     if button_id == TWO_PLAYERS:
+        disable_input()
         emit mode_selected(TWO_PLAYER_LOCAL)
     elif button_id == VS_COMPUTER:
-        emit mode_selected(ONE_PLAYER_VS_AI)
+        show_difficulty_selector()
+
+on_difficulty_tapped(level):          # level ∈ {EASY, MEDIUM, HARD}
+    disable_input()
+    emit difficulty_selected(level)
+    emit mode_selected(ONE_PLAYER_VS_AI)
 
 on_show():
     set_visible(true)
+    difficulty_selector.hide()
     enable_input()
 
 on_hide():
     set_visible(false)
     disable_input()
+
+show_difficulty_selector():
+    difficulty_selector.show()
+    difficulty_selector.set_default(MEDIUM)
+    vs_computer_button.disable()
 ```
 
 ## Edge Cases
@@ -70,6 +92,7 @@ The logical canvas scales to fit. Menu buttons remain centred in logical canvas 
 | Direction | System | Nature |
 |-----------|--------|--------|
 | Signals | Game Mode Manager | Emits `mode_selected(mode)` on button tap |
+| Signals | AI Difficulty Config | Emits `difficulty_selected(level)` before `mode_selected`; AI Difficulty Config stores the selection for the upcoming match |
 | Controlled by | Game State Machine | Receives show/hide calls; only visible in MENU state |
 
 No other dependencies. The Main Menu does not read from any gameplay system.
@@ -81,6 +104,7 @@ No other dependencies. The Main Menu does not read from any gameplay system.
 | Button width | 220 px | 160–280 px | Tap target size. Must remain ≥ 48 px in height after scaling. |
 | Button height | 60 px | 48–80 px | Tap target height. Lower bound is accessibility minimum. |
 | Button vertical gap | 24 px | 12–40 px | Spacing between the two buttons. |
+| `DIFFICULTY_BUTTON_W` | 80 px | 60–100 px | Width of each difficulty option button. Three fit side-by-side below the "vs Computer" button. |
 
 ## Acceptance Criteria
 
@@ -93,3 +117,6 @@ No other dependencies. The Main Menu does not read from any gameplay system.
 | AC5 | Double-tap emits only one `mode_selected` signal | Unit test: simulate two rapid taps → assert signal emitted exactly once |
 | AC6 | Both buttons have tap area ≥ 48×48 px | Visual test: inspect button Rect2 in scene → assert size.x ≥ 48, size.y ≥ 48 |
 | AC7 | Menu reappears when Game State Machine returns to MENU state | Integration test: complete a match and tap "Menu" → assert main menu visible |
+| AC8 | Tapping "vs Computer" shows difficulty selector with Medium pre-selected | Manual: tap "vs Computer" → assert selector visible, Medium highlighted |
+| AC9 | Tapping "Easy" emits `difficulty_selected(EASY)` then `mode_selected(ONE_PLAYER_VS_AI)` | Unit test: tap Easy → assert both signals emitted in order |
+| AC10 | Difficulty selector is hidden on `on_show()` (fresh menu display) | Unit test: call `on_show()` → assert selector not visible |

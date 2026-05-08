@@ -32,7 +32,7 @@ On mode selection, Game Mode Manager produces a `MatchConfig` value object:
 **Match Lifecycle**
 1. Main Menu emits `mode_selected(mode)` → Game Mode Manager creates `MatchConfig` and emits `match_ready(config)` to Game State Machine
 2. Match runs under Turn System control
-3. Win Condition emits `match_won(winner_id)` → Game Mode Manager receives it and emits `match_ended(winner_id, config)` to Game State Machine
+3. Win Condition emits `match_won(winner_id)` → Game Mode Manager is the sole listener; it enriches this to `match_ended(winner_id, config)` and emits it to Game State Machine (the Game State Machine never listens to Win Condition directly)
 4. Game State Machine displays result; on rematch or menu return, Game Mode Manager is reset
 
 **AI Side**

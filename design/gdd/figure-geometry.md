@@ -51,6 +51,28 @@ arms_rect     = Rect2(anchor.x − 40, anchor.y − 126, 80, 36)
 legs_rect     = Rect2(anchor.x − 18, anchor.y − 72,  36, 72)
 ```
 
+**Zone Accessor Methods**
+
+These are the canonical accessors. All callers (Body-Zone Hit Detection, AI Targeting, Figure Renderer) must use these instead of computing geometry inline.
+
+```
+get_zone_circle(player_id) → {centre: Vector2, radius: float}:
+    anchor = get_anchor(player_id)
+    return {centre: anchor + Vector2(0, −162), radius: HEAD_RADIUS}
+
+get_zone_rect(player_id, zone) → Rect2:
+    anchor = get_anchor(player_id)
+    if zone == ARMS:
+        return Rect2(anchor.x − 40, anchor.y − 126, ARMS_WIDTH, ARMS_HEIGHT)
+    if zone == LEGS:
+        return Rect2(anchor.x − 18, anchor.y − 72,  LEGS_WIDTH, LEGS_HEIGHT)
+
+get_zone_centre(player_id, zone) → Vector2:
+    if zone == HEAD:
+        return get_zone_circle(player_id).centre
+    return get_zone_rect(player_id, zone).get_center()
+```
+
 **F2 — Ray vs Circle (Head)**
 ```
 # Ray: origin point O, unit direction D

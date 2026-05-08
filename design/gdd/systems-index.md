@@ -29,12 +29,13 @@ Flick Duel is a mechanically compact 1v1 dueling game. Its systems decompose int
 | 10 | Win Condition | Core Gameplay | MVP | Designed | design/gdd/win-condition.md | Body-Zone Hit Detection |
 | 11 | Game Mode Manager *(inferred)* | Game Flow | MVP | Designed | design/gdd/game-mode-manager.md | Two-Action Turn System |
 | 12 | Game State Machine *(inferred)* | Game Flow | MVP | Designed | design/gdd/game-state-machine.md | Win Condition, Game Mode Manager |
-| 13 | Main Menu *(inferred)* | Game Flow | MVP | Designed | design/gdd/main-menu.md | Game State Machine |
+| 13 | Main Menu *(inferred)* | Game Flow | MVP | Revised | design/gdd/main-menu.md | Game State Machine |
 | 14 | AI Targeting | AI | MVP | Designed | design/gdd/ai-targeting.md | Figure Geometry, Game Mode Manager |
 | 15 | AI Difficulty Config *(inferred)* | AI | MVP | Designed | design/gdd/ai-difficulty-config.md | AI Targeting |
 | 16 | Figure Renderer *(inferred)* | Presentation | MVP | Designed | design/gdd/figure-renderer.md | Figure Geometry, Status Effects |
 | 17 | HUD / Turn Indicator *(inferred)* | Presentation | MVP | Designed | design/gdd/hud-turn-indicator.md | Two-Action Turn System, Status Effects |
 | 18 | Match Result Screen *(inferred)* | Presentation | V1.0 | Designed | design/gdd/match-result-screen.md | Game State Machine |
+| 19 | Movement | Core Gameplay | MVP | Designed | design/gdd/movement.md | Input System, Screen Layout, Figure Geometry |
 
 ---
 
@@ -73,6 +74,7 @@ Flick Duel is a mechanically compact 1v1 dueling game. Its systems decompose int
 1. **Figure Geometry** — depends on: Screen Layout. Defines stick figure as spatial object with three named hit zones and their collision boundaries. Bottleneck — gates Hit Detection, Renderer, and AI.
 2. **Action Validation** — depends on: Status Effects. Determines which actions a player may take given current status.
 3. **Trajectory Visualization** — depends on: Input System, Screen Layout. Draws live aim line during drag; fires and persists shot line on release.
+4. **Movement** — depends on: Input System, Screen Layout, Figure Geometry. Handles MOVE action: repositions figure anchor X within player zone via tap destination.
 
 ### Feature Layer (depends on Core)
 
@@ -113,17 +115,18 @@ None detected.
 | 5 | Figure Geometry | MVP | Core | M |
 | 6 | Action Validation | MVP | Core | S |
 | 7 | Trajectory Visualization | MVP | Core | M |
-| 8 | Body-Zone Hit Detection | MVP | Feature | M |
-| 9 | Two-Action Turn System | MVP | Feature | M |
-| 10 | Win Condition | MVP | Feature+ | S |
-| 11 | AI Targeting | MVP | Feature+ | L |
-| 12 | AI Difficulty Config | MVP | Feature+ | S |
-| 13 | Game Mode Manager | MVP | Feature+ | S |
-| 14 | Figure Renderer | MVP | Feature+ | M |
-| 15 | Game State Machine | MVP | Presentation | S |
-| 16 | HUD / Turn Indicator | MVP | Presentation | M |
-| 17 | Main Menu | MVP | Presentation | S |
-| 18 | Match Result Screen | V1.0 | Presentation | S |
+| 8 | Movement | MVP | Core | S |
+| 9 | Body-Zone Hit Detection | MVP | Feature | M |
+| 10 | Two-Action Turn System | MVP | Feature | M |
+| 11 | Win Condition | MVP | Feature+ | S |
+| 12 | AI Targeting | MVP | Feature+ | L |
+| 13 | AI Difficulty Config | MVP | Feature+ | S |
+| 14 | Game Mode Manager | MVP | Feature+ | S |
+| 15 | Figure Renderer | MVP | Feature+ | M |
+| 16 | Game State Machine | MVP | Presentation | S |
+| 17 | HUD / Turn Indicator | MVP | Presentation | M |
+| 18 | Main Menu | MVP | Presentation | S |
+| 19 | Match Result Screen | V1.0 | Presentation | S |
 
 *Effort: S = 1 session, M = 2–3 sessions, L = 4+ sessions.*
 
@@ -145,19 +148,23 @@ Systems at the same layer with no inter-dependencies (e.g., Screen Layout, Statu
 
 | Metric | Count |
 |--------|-------|
-| Total systems identified | 18 |
-| Design docs started | 2 |
+| Total systems identified | 19 |
+| Design docs completed | 19 |
+| Cross-GDD review completed | 1 (design/gdd/gdd-cross-review-2026-05-08.md) |
 | Design docs reviewed | 0 |
 | Design docs approved | 0 |
-| MVP systems designed | 2 / 17 |
-| V1.0 systems designed | 0 / 1 |
+| MVP systems designed | 18 / 18 |
+| V1.0 systems designed | 1 / 1 |
+| Blocking issues resolved | 6 / 6 |
+| Warning issues resolved | in progress |
 
 ---
 
 ## Next Steps
 
-- [ ] Design MVP systems in the order above — run `/design-system [system-name]`
-- [ ] Prototype the Input System and Figure Geometry before finalising zone size specs — run `/prototype flick-shot-mechanic`
-- [ ] Run `/design-review design/gdd/[system].md` after each completed GDD
-- [ ] Run `/gate-check pre-production` when all MVP GDDs are authored and reviewed
-- [ ] Update this index (Status column, Progress Tracker) as each GDD is completed
+- [x] Design all 19 MVP + V1.0 system GDDs
+- [x] Run `/review-all-gdds` — cross-GDD review complete (design/gdd/gdd-cross-review-2026-05-08.md)
+- [x] Resolve all 6 blocking issues from cross-GDD review
+- [ ] Run `/design-review design/gdd/[system].md` on each GDD before architecture
+- [ ] Run `/gate-check pre-production` when all reviews pass
+- [ ] Run `/create-architecture` to begin implementation planning

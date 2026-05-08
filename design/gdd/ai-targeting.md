@@ -79,8 +79,8 @@ Zone centres are derived from the figure anchor, which is always within the play
 **EC4 — Weights in AI Difficulty Config do not sum to 1.0**
 Normalise the weights before sampling: `w_i = w_i / sum(weights)`. Never assume the config provides pre-normalised weights.
 
-**EC5 — AI is asked to MOVE when already Immobilized**
-Cannot occur — Action Validation prevents the Turn System from offering MOVE to an immobilized player. AI targeting is only called for valid actions.
+**EC5 — AI is asked to MOVE when already Immobilized, or FIRE when Disarmed**
+Cannot occur — the Turn System calls `get_valid_actions(ai_player_id)` at TURN_START and only calls `ai_take_action(action_type, ...)` with action types present in the current `remaining_pool`. AI Targeting is only ever called with actions that pass Action Validation. It does not need to validate action legality independently.
 
 ## Dependencies
 

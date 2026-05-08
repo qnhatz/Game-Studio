@@ -78,10 +78,27 @@ on_turn_end():
     begin_turn(active_player)
 
 on_auto_skip():
+    # tick_effects and get_valid_actions were already called in begin_turn()
+    # before reaching this path — effects have ticked for this turn.
     show_skip_indicator(active_player)
     # after AUTO_SKIP_DISPLAY_MS delay:
     state = TURN_END
     on_turn_end()
+
+halt():
+    # Called by Game State Machine on match end.
+    # Discards the current turn immediately. TURN_END does not fire.
+    # The state machine enters HALTED and takes no further action.
+    state = HALTED
+
+reset():
+    # Called by Game State Machine on rematch start.
+    # Resets to initial state regardless of current state (including HALTED or mid-turn).
+    state       = IDLE
+    active_player = P1
+    remaining_pool.clear()
+    # Post-condition: system is in the same state as immediately after instantiation;
+    # ready for begin_turn(P1) to be called.
 ```
 
 **Constants:**
@@ -109,6 +126,9 @@ Assert fires — this is a caller error. The UI/Input System must only surface a
 
 **EC6 — Auto-skip display interrupted (e.g. browser tab loses focus)**
 The skip indicator timer is paused when the game loses focus. It resumes on focus return. The turn does not advance during a focus loss.
+
+**EC7 — `halt()` called mid-turn (e.g. match ends on first action)**
+`halt()` immediately transitions to `HALTED`. The second action in `remaining_pool` is discarded. `TURN_END` does not fire. No further state transitions occur until `reset()` is called.
 
 ## Dependencies
 

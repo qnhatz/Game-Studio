@@ -72,7 +72,7 @@ Geometrically impossible — only one player fires per action, and turns are str
 | Direction | System | Nature |
 |-----------|--------|--------|
 | Depends on | Body-Zone Hit Detection | Receives `hit_result` — WIN only triggers on `HEAD` |
-| Signals | Game State Machine | Emits `match_won(winner_id)` to trigger match-end flow |
+| Signals | Game Mode Manager | Emits `match_won(winner_id)`; Game Mode Manager enriches this to `match_ended(winner_id, config)` for the Game State Machine |
 | Called by | Two-Action Turn System | Turn System calls `on_hit_resolved` after each FIRE action; halts turn on WIN return |
 
 This system has no internal state and no other dependencies.
