@@ -4,7 +4,7 @@
 
 ## Current Task
 
-Architecture review complete (CONCERNS verdict). Next: fix 9 items across ADR-0003, ADR-0009, ADR-0010, then resolve OQ-1 and write ADR-0007.
+Priority 1 ADR fixes complete (all 8 items). Next: resolve OQ-1 (iOS Safari drag prototype), write ADR-0007, then mark clean ADRs as Accepted.
 
 ## Status
 
@@ -36,14 +36,14 @@ Architecture review complete (CONCERNS verdict). Next: fix 9 items across ADR-00
 
 ### Priority 1 — Fix conflicts and engine issues in ADRs (before marking Accepted)
 
-1. [ ] Update ADR-0003: Immobilized visual → bold X through legs rect in opponent colour (not grey)
-2. [ ] Update ADR-0003: freeze() → store Tween refs + `tween.kill()` + `is_instance_valid()` guard
-3. [ ] Update ADR-0003: add `Line2D.antialiased = true` specification
-4. [ ] Update ADR-0009: add Gaussian pre-error layer before FlickEvent construction
-5. [ ] Update ADR-0009: add `w_miss` parameter to `AIDifficultyConfig.get_params()` spec
-6. [ ] Update ADR-0010: document MOUSE_FILTER_IGNORE per-node vs recursive decision
-7. [ ] Update ADR-0010: add `gui_release_focus()` contract to show/hide lifecycle
-8. [ ] Standardise StatusEffects method names: update architecture.md + ADR-0004 pseudocode
+1. [x] Update ADR-0003: Immobilized visual → bold X through legs rect in opponent colour (not grey)
+2. [x] Update ADR-0003: freeze() → store Tween refs + `tween.kill()` + `is_instance_valid()` guard
+3. [x] Update ADR-0003: add `Line2D.antialiased = true` specification
+4. [x] Update ADR-0009: add Gaussian pre-error layer before FlickEvent construction
+5. [x] Update ADR-0009: add `w_miss` parameter to `AIDifficultyConfig.get_params()` spec
+6. [x] Update ADR-0010: document MOUSE_FILTER_IGNORE per-node vs recursive decision
+7. [x] Update ADR-0010: add `gui_release_focus()` contract to show/hide lifecycle
+8. [x] Standardise StatusEffects method names: update architecture.md + ADR-0004 pseudocode
 
 ### Priority 2 — Complete ADR set
 
@@ -107,5 +107,5 @@ Architecture review complete (CONCERNS verdict). Next: fix 9 items across ADR-00
 <!-- STATUS -->
 Epic: Technical Setup
 Feature: Architecture
-Task: Fix 9 ADR issues from architecture review, then write ADR-0007
+Task: Resolve OQ-1 (iOS Safari drag prototype) → write ADR-0007 → mark ADRs Accepted
 <!-- /STATUS -->
