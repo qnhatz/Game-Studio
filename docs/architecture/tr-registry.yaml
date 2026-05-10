@@ -8,49 +8,470 @@
 #   - IDs are PERMANENT. Never renumber, never delete (use status: deprecated).
 #   - Add new entries only at the END of each system's list.
 #   - When a GDD requirement is reworded (same intent): update `requirement`
-#     text and add a `revised` date. The ID stays the same.
-#   - When a requirement is removed from the GDD: set status: deprecated.
-#   - When a requirement is split or replaced: set status: superseded-by with
-#     the new TR-ID(s).
+#     text and add `revised: [date]`. ID stays the same.
+#   - When a requirement is removed from a GDD: set status: deprecated.
 #
-# WRITTEN BY: /architecture-review (appends new entries, never overwrites)
-# READ BY:    /create-stories (embed IDs in stories)
-#             /story-done (look up current requirement text at review time)
-#             /story-readiness (validate TR-ID exists and is active)
-#
-# ID FORMAT: TR-[system-slug]-[NNN]
-#   system-slug = short slug matching the GDD system name
-#   NNN = three-digit zero-padded sequence per system, starting at 001
-#
-# STATUS VALUES: active | deprecated | superseded-by: TR-[system]-NNN
+# Generated: 2026-05-10 by /architecture-review (initial population)
+# Total: 58 requirements across 19 systems
 
-version: 1
-last_updated: ""
+requirements:
 
-requirements: []
+  # ─── Screen Layout ───────────────────────────────────────────────
+  - id: TR-SCRN-001
+    system: Screen Layout
+    gdd: design/gdd/screen-layout.md
+    requirement: Canvas 800×450 px, 16:9 aspect ratio
+    adr: ADR-0002
+    status: active
 
-# --- EXAMPLE ENTRIES (remove when first real entries are added) ---
-#
-# - id: TR-combat-001
-#   system: combat
-#   gdd: design/gdd/combat-system.md
-#   requirement: "Player takes damage from enemies based on attack power minus defence"
-#   created: 2026-03-10
-#   revised: ""
-#   status: active
-#
-# - id: TR-combat-002
-#   system: combat
-#   gdd: design/gdd/combat-system.md
-#   requirement: "Combo window timing is 0.4 seconds between hits"
-#   created: 2026-03-10
-#   revised: "2026-04-01"
-#   status: active
-#
-# - id: TR-combat-003
-#   system: combat
-#   gdd: design/gdd/combat-system.md
-#   requirement: "Old damage formula using raw stats"
-#   created: 2026-03-10
-#   revised: ""
-#   status: superseded-by: TR-combat-001
+  - id: TR-SCRN-002
+    system: Screen Layout
+    gdd: design/gdd/screen-layout.md
+    requirement: Keep Aspect letterbox scaling
+    adr: ADR-0002
+    status: active
+
+  - id: TR-SCRN-003
+    system: Screen Layout
+    gdd: design/gdd/screen-layout.md
+    requirement: P1-left / P2-right spatial split
+    adr: ADR-0001
+    status: active
+
+  - id: TR-SCRN-004
+    system: Screen Layout
+    gdd: design/gdd/screen-layout.md
+    requirement: HUD strip 90 px top band
+    adr: ADR-0010
+    status: active
+
+  - id: TR-SCRN-005
+    system: Screen Layout
+    gdd: design/gdd/screen-layout.md
+    requirement: Gesture dead zone / tap vs drag discrimination
+    adr: null  # ADR-0007 pending OQ-1
+    status: active
+
+  # ─── Status Effects ───────────────────────────────────────────────
+  - id: TR-STE-001
+    system: Status Effects
+    gdd: design/gdd/status-effects.md
+    requirement: "Disarmed state: can_fire = false for N turns"
+    adr: ADR-0004
+    status: active
+
+  - id: TR-STE-002
+    system: Status Effects
+    gdd: design/gdd/status-effects.md
+    requirement: "Immobilized state: can_move = false for N turns"
+    adr: ADR-0004
+    status: active
+
+  - id: TR-STE-003
+    system: Status Effects
+    gdd: design/gdd/status-effects.md
+    requirement: tick_effects() called each turn start
+    adr: ADR-0004
+    status: active
+
+  - id: TR-STE-004
+    system: Status Effects
+    gdd: design/gdd/status-effects.md
+    requirement: reset_all() restores clean state on rematch
+    adr: ADR-0001
+    status: active
+
+  - id: TR-STE-005
+    system: Status Effects
+    gdd: design/gdd/status-effects.md
+    requirement: "Method API: set_disarmed / tick_effects / reset_all"
+    adr: ADR-0004  # partial — naming inconsistency with architecture.md
+    status: active
+
+  # ─── Input System ─────────────────────────────────────────────────
+  - id: TR-INP-001
+    system: Input System
+    gdd: design/gdd/input-system.md
+    requirement: "Mouse drag → FlickEvent (direction, power, timestamp)"
+    adr: ADR-0008
+    status: active
+
+  - id: TR-INP-002
+    system: Input System
+    gdd: design/gdd/input-system.md
+    requirement: Touch drag → FlickEvent (same as mouse path)
+    adr: ADR-0008
+    status: active
+
+  - id: TR-INP-003
+    system: Input System
+    gdd: design/gdd/input-system.md
+    requirement: "InputEventScreenDrag: continuous fire vs drag-end behaviour"
+    adr: null  # ADR-0007 pending OQ-1
+    status: active
+
+  - id: TR-INP-004
+    system: Input System
+    gdd: design/gdd/input-system.md
+    requirement: Input window deactivation on orientation change
+    adr: null  # ADR-0007 pending OQ-1
+    status: active
+
+  # ─── Shot Spread Calculation ───────────────────────────────────────
+  - id: TR-SSC-001
+    system: Shot Spread Calculation
+    gdd: design/gdd/shot-spread-calculation.md
+    requirement: "apply_spread(event, spread_deg) → final direction Vector2"
+    adr: ADR-0004, ADR-0009
+    status: active
+
+  - id: TR-SSC-002
+    system: Shot Spread Calculation
+    gdd: design/gdd/shot-spread-calculation.md
+    requirement: RngService seeded for determinism in tests
+    adr: ADR-0006
+    status: active
+
+  - id: TR-SSC-003
+    system: Shot Spread Calculation
+    gdd: design/gdd/shot-spread-calculation.md
+    requirement: Spread range configurable per difficulty level
+    adr: ADR-0009
+    status: active
+
+  # ─── Figure Geometry ──────────────────────────────────────────────
+  - id: TR-FIG-001
+    system: Figure Geometry
+    gdd: design/gdd/figure-geometry.md
+    requirement: "get_zone_circle(player_id) → {centre, radius} for HEAD zone"
+    adr: ADR-0005
+    status: active
+
+  - id: TR-FIG-002
+    system: Figure Geometry
+    gdd: design/gdd/figure-geometry.md
+    requirement: "get_zone_rect(player_id, zone) → Rect2 for ARMS/LEGS zones"
+    adr: ADR-0005
+    status: active
+
+  - id: TR-FIG-003
+    system: Figure Geometry
+    gdd: design/gdd/figure-geometry.md
+    requirement: Anchor repositions on MOVE; all zones track with anchor
+    adr: ADR-0001
+    status: active
+
+  - id: TR-FIG-004
+    system: Figure Geometry
+    gdd: design/gdd/figure-geometry.md
+    requirement: "P2 mirror: X offsets negated; hit zone boundaries unchanged"
+    adr: ADR-0001  # partial — implicit in single-scene topology
+    status: active
+
+  # ─── Action Validation ────────────────────────────────────────────
+  - id: TR-ACV-001
+    system: Action Validation
+    gdd: design/gdd/action-validation.md
+    requirement: get_valid_actions(player_id) respects Status Effects flags
+    adr: ADR-0004
+    status: active
+
+  - id: TR-ACV-002
+    system: Action Validation
+    gdd: design/gdd/action-validation.md
+    requirement: AUTO_SKIP triggered when no actions valid
+    adr: ADR-0004
+    status: active
+
+  # ─── Trajectory Visualization ─────────────────────────────────────
+  - id: TR-TVIS-001
+    system: Trajectory Visualization
+    gdd: design/gdd/trajectory-visualization.md
+    requirement: Live aim line draws during drag input
+    adr: ADR-0003
+    status: active
+
+  - id: TR-TVIS-002
+    system: Trajectory Visualization
+    gdd: design/gdd/trajectory-visualization.md
+    requirement: Shot lines persist during HALTED state (freeze)
+    adr: ADR-0003  # partial — freeze() implementation bug (tween.kill() missing)
+    status: active
+
+  - id: TR-TVIS-003
+    system: Trajectory Visualization
+    gdd: design/gdd/trajectory-visualization.md
+    requirement: Live aim line updates on each InputEventScreenDrag event
+    adr: null  # ADR-0007 pending OQ-1
+    status: active
+
+  - id: TR-TVIS-004
+    system: Trajectory Visualization
+    gdd: design/gdd/trajectory-visualization.md
+    requirement: "Shot lines fade via Tween; guarded by is_instance_valid()"
+    adr: ADR-0003
+    status: active
+
+  - id: TR-TVIS-005
+    system: Trajectory Visualization
+    gdd: design/gdd/trajectory-visualization.md
+    requirement: reset() clears all shot lines on rematch
+    adr: ADR-0001
+    status: active
+
+  # ─── Movement ─────────────────────────────────────────────────────
+  - id: TR-MOV-001
+    system: Movement
+    gdd: design/gdd/movement.md
+    requirement: MOVE action repositions anchor X within player zone bounds
+    adr: ADR-0004
+    status: active
+
+  - id: TR-MOV-002
+    system: Movement
+    gdd: design/gdd/movement.md
+    requirement: Tap destination input routing (distinct from flick drag)
+    adr: null  # ADR-0007 pending OQ-1
+    status: active
+
+  # ─── Body-Zone Hit Detection ──────────────────────────────────────
+  - id: TR-BZHD-001
+    system: Body-Zone Hit Detection
+    gdd: design/gdd/body-zone-hit-detection.md
+    requirement: ray_vs_circle() analytic method for HEAD zone
+    adr: ADR-0005
+    status: active
+
+  - id: TR-BZHD-002
+    system: Body-Zone Hit Detection
+    gdd: design/gdd/body-zone-hit-detection.md
+    requirement: ray_vs_aabb() slab method for ARMS/LEGS zones
+    adr: ADR-0005
+    status: active
+
+  - id: TR-BZHD-003
+    system: Body-Zone Hit Detection
+    gdd: design/gdd/body-zone-hit-detection.md
+    requirement: "Returns StringName in {&\"HEAD\", &\"ARMS\", &\"LEGS\", &\"MISS\"}"
+    adr: ADR-0004, ADR-0005
+    status: active
+
+  # ─── Two-Action Turn System ───────────────────────────────────────
+  - id: TR-TATS-001
+    system: Two-Action Turn System
+    gdd: design/gdd/two-action-turn-system.md
+    requirement: "begin_turn() → TURN_START → AWAITING_FIRST_ACTION"
+    adr: ADR-0004
+    status: active
+
+  - id: TR-TATS-002
+    system: Two-Action Turn System
+    gdd: design/gdd/two-action-turn-system.md
+    requirement: on_action_selected() synchronous critical path (no signals in chain)
+    adr: ADR-0004
+    status: active
+
+  - id: TR-TATS-003
+    system: Two-Action Turn System
+    gdd: design/gdd/two-action-turn-system.md
+    requirement: "reset() post-conditions: state = IDLE, pool cleared"
+    adr: ADR-0001
+    status: active
+
+  - id: TR-TATS-004
+    system: Two-Action Turn System
+    gdd: design/gdd/two-action-turn-system.md
+    requirement: halt() discards in-progress turn without emitting TURN_END
+    adr: ADR-0001, ADR-0004
+    status: active
+
+  - id: TR-TATS-005
+    system: Two-Action Turn System
+    gdd: design/gdd/two-action-turn-system.md
+    requirement: "Turn states: IDLE/TURN_START/AWAITING_*/ACTION_EXECUTING/TURN_END/AUTO_SKIP/HALTED"
+    adr: ADR-0004
+    status: active
+
+  # ─── Win Condition ────────────────────────────────────────────────
+  - id: TR-WIN-001
+    system: Win Condition
+    gdd: design/gdd/win-condition.md
+    requirement: Headshot → match_won signal emitted
+    adr: ADR-0004
+    status: active
+
+  - id: TR-WIN-002
+    system: Win Condition
+    gdd: design/gdd/win-condition.md
+    requirement: check() is stateless (no owned data)
+    adr: ADR-0004
+    status: active
+
+  # ─── Game Mode Manager ────────────────────────────────────────────
+  - id: TR-GMM-001
+    system: Game Mode Manager
+    gdd: design/gdd/game-mode-manager.md
+    requirement: on_mode_selected() creates MatchConfig and emits match_ready
+    adr: ADR-0001
+    status: active
+
+  - id: TR-GMM-002
+    system: Game Mode Manager
+    gdd: design/gdd/game-mode-manager.md
+    requirement: "is_ai(player_id) → bool for routing AI vs human turns"
+    adr: ADR-0009
+    status: active
+
+  - id: TR-GMM-003
+    system: Game Mode Manager
+    gdd: design/gdd/game-mode-manager.md
+    requirement: on_rematch() re-emits match_ready with same MatchConfig
+    adr: ADR-0001
+    status: active
+
+  # ─── Game State Machine ───────────────────────────────────────────
+  - id: TR-GSM-001
+    system: Game State Machine
+    gdd: design/gdd/game-state-machine.md
+    requirement: "States: MENU / MODE_SELECT / IN_MATCH / RESULT"
+    adr: ADR-0001  # partial — implied by single-scene topology
+    status: active
+
+  - id: TR-GSM-002
+    system: Game State Machine
+    gdd: design/gdd/game-state-machine.md
+    requirement: Scene visibility routing via show/hide (no change_scene_to_file)
+    adr: ADR-0001  # partial — this IS the single-scene decision
+    status: active
+
+  - id: TR-GSM-003
+    system: Game State Machine
+    gdd: design/gdd/game-state-machine.md
+    requirement: State transition orchestrates all system reset() calls
+    adr: ADR-0001  # partial — covered in architecture.md data flow, not ADR body
+    status: active
+
+  # ─── Main Menu ────────────────────────────────────────────────────
+  - id: TR-MNU-001
+    system: Main Menu
+    gdd: design/gdd/main-menu.md
+    requirement: show/hide Control subtree on state transitions
+    adr: ADR-0010  # partial — gui_release_focus() protocol not specified
+    status: active
+
+  - id: TR-MNU-002
+    system: Main Menu
+    gdd: design/gdd/main-menu.md
+    requirement: Difficulty selector subtree visibility gated on mode
+    adr: ADR-0010  # partial — MOUSE_FILTER_IGNORE cascade not specified
+    status: active
+
+  # ─── AI Targeting ─────────────────────────────────────────────────
+  - id: TR-AIR-001
+    system: AI Targeting
+    gdd: design/gdd/ai-targeting.md
+    requirement: select_action() reads FigureGeometry + AIDifficultyConfig
+    adr: ADR-0009
+    status: active
+
+  - id: TR-AIR-002
+    system: AI Targeting
+    gdd: design/gdd/ai-targeting.md
+    requirement: Gaussian pre-error applied to direction before FlickEvent construction
+    adr: ADR-0009  # partial — Gaussian layer not yet in ADR spec
+    status: active
+
+  - id: TR-AIR-003
+    system: AI Targeting
+    gdd: design/gdd/ai-targeting.md
+    requirement: AI synthesises FlickEvent and joins at on_action_selected()
+    adr: ADR-0009
+    status: active
+
+  - id: TR-AIR-004
+    system: AI Targeting
+    gdd: design/gdd/ai-targeting.md
+    requirement: Zone selection by weighted random including w_miss for deliberate misses
+    adr: ADR-0009  # partial — w_miss not in AIDifficultyConfig spec
+    status: active
+
+  # ─── AI Difficulty Config ─────────────────────────────────────────
+  - id: TR-ADC-001
+    system: AI Difficulty Config
+    gdd: design/gdd/ai-difficulty-config.md
+    requirement: "get_params() → {accuracy_spread_deg, zone_weights, preferred_distance_px, min_distance_px}"
+    adr: ADR-0009
+    status: active
+
+  - id: TR-ADC-002
+    system: AI Difficulty Config
+    gdd: design/gdd/ai-difficulty-config.md
+    requirement: "Difficulty levels: Easy / Medium / Hard"
+    adr: ADR-0009
+    status: active
+
+  # ─── Figure Renderer ──────────────────────────────────────────────
+  - id: TR-FRD-001
+    system: Figure Renderer
+    gdd: design/gdd/figure-renderer.md
+    requirement: "Line2D nodes; hand-jitter baked once at _ready(); antialiased = true"
+    adr: ADR-0003
+    status: active
+
+  - id: TR-FRD-002
+    system: Figure Renderer
+    gdd: design/gdd/figure-renderer.md
+    requirement: "Disarmed overlay: bold X through arms rect in opponent ink colour"
+    adr: ADR-0003
+    status: active
+
+  - id: TR-FRD-003
+    system: Figure Renderer
+    gdd: design/gdd/figure-renderer.md
+    requirement: "Immobilized overlay: bold X through legs rect in opponent ink colour"
+    adr: ADR-0003  # CONFLICT — ADR-0003 specifies grey shading instead; needs update
+    status: active
+
+  # ─── HUD / Turn Indicator ─────────────────────────────────────────
+  - id: TR-HUD-001
+    system: HUD/Turn Indicator
+    gdd: design/gdd/hud-turn-indicator.md
+    requirement: Turn arrow drawn in active player ink colour
+    adr: ADR-0010
+    status: active
+
+  - id: TR-HUD-002
+    system: HUD/Turn Indicator
+    gdd: design/gdd/hud-turn-indicator.md
+    requirement: CanvasLayer at layer=1 for HUD
+    adr: ADR-0010
+    status: active
+
+  - id: TR-HUD-003
+    system: HUD/Turn Indicator
+    gdd: design/gdd/hud-turn-indicator.md
+    requirement: MOUSE_FILTER_IGNORE on HUD subtree (no gesture interception)
+    adr: ADR-0010  # partial — per-node vs recursive cascade not documented
+    status: active
+
+  - id: TR-HUD-004
+    system: HUD/Turn Indicator
+    gdd: design/gdd/hud-turn-indicator.md
+    requirement: HUD show/hide must not break input routing (dual-focus)
+    adr: ADR-0010  # partial — gui_release_focus() protocol not in ADR
+    status: active
+
+  # ─── Match Result Screen ─────────────────────────────────────────
+  - id: TR-MRS-001
+    system: Match Result Screen
+    gdd: design/gdd/match-result-screen.md
+    requirement: show_result(winner_id, config) displays win/loss message
+    adr: ADR-0001
+    status: active
+
+  - id: TR-MRS-002
+    system: Match Result Screen
+    gdd: design/gdd/match-result-screen.md
+    requirement: rematch_requested() signal triggers full system reset
+    adr: ADR-0001
+    status: active

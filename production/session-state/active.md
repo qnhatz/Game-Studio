@@ -1,50 +1,111 @@
 # Session State — Flick Duel
 
-*Last updated: 2026-05-07*
+*Last updated: 2026-05-10*
 
 ## Current Task
 
-Status Effects GDD complete. Ready to begin GDD #3 — Input System.
+Architecture review complete (CONCERNS verdict). Next: fix 9 items across ADR-0003, ADR-0009, ADR-0010, then resolve OQ-1 and write ADR-0007.
 
 ## Status
 
 - [x] Game concept authored — `design/gdd/game-concept.md`
 - [x] Engine configured — Godot 4.6, docs populated
 - [x] Art bible authored — `design/art/art-bible.md` (all 9 sections)
-- [x] Systems index created — `design/gdd/systems-index.md` (18 systems, 17 MVP)
-- [x] Screen Layout GDD — `design/gdd/screen-layout.md` (all sections, Designed)
-- [x] Status Effects GDD — `design/gdd/status-effects.md` (all sections, Designed)
-- [ ] Individual GDDs — 2 / 18 authored
+- [x] Systems index created — `design/gdd/systems-index.md` (19 systems, 18 MVP + 1 V1.0)
+- [x] All 19 GDDs authored — complete set in `design/gdd/`
+- [x] Cross-GDD review complete — `design/gdd/gdd-cross-review-2026-05-08.md`
+- [x] All 6 blocking issues resolved (B1–B6)
+- [x] Gate check passed (CONCERNS — proceed) — `Technical Setup` stage active
+- [x] `production/stage.txt` = `Technical Setup`
+- [x] Master architecture document — `docs/architecture/architecture.md` (v1.0, TD-APPROVED)
+- [x] All 11 ADRs written (ADR-0001–0006, ADR-0008–0011; ADR-0007 pending OQ-1)
+- [x] `/architecture-review` complete — CONCERNS verdict
+  - Review report: `docs/architecture/architecture-review-2026-05-10.md`
+  - Traceability index: `docs/architecture/architecture-traceability.md`
+  - TR Registry: `docs/architecture/tr-registry.yaml` (58 IDs populated)
 
-## Active File
+## Open Questions (must resolve before ADR-0007)
 
-`design/gdd/status-effects.md` (complete — next: `design/gdd/input-system.md`)
+- **OQ-1**: iOS Safari InputEventScreenDrag — does it fire continuously during drag or only on drag-end?
+  Resolve by building a one-page gesture prototype (just drag event logging) and testing on Safari iOS.
+  This unblocks ADR-0007 (Input System Architecture).
+- **OQ-2**: Godot 4.6 Compatibility renderer actual WASM memory baseline.
+  Measure with browser DevTools on a real export before marking ADR-0002 as Accepted.
 
-## Next Action
+## Required Actions Before Pre-Production Gate
 
-Run `/design-system input-system` — #3 in design order (Foundation, no dependencies, medium effort).
+### Priority 1 — Fix conflicts and engine issues in ADRs (before marking Accepted)
 
-## Key Decisions
+1. [ ] Update ADR-0003: Immobilized visual → bold X through legs rect in opponent colour (not grey)
+2. [ ] Update ADR-0003: freeze() → store Tween refs + `tween.kill()` + `is_instance_valid()` guard
+3. [ ] Update ADR-0003: add `Line2D.antialiased = true` specification
+4. [ ] Update ADR-0009: add Gaussian pre-error layer before FlickEvent construction
+5. [ ] Update ADR-0009: add `w_miss` parameter to `AIDifficultyConfig.get_params()` spec
+6. [ ] Update ADR-0010: document MOUSE_FILTER_IGNORE per-node vs recursive decision
+7. [ ] Update ADR-0010: add `gui_release_focus()` contract to show/hide lifecycle
+8. [ ] Standardise StatusEffects method names: update architecture.md + ADR-0004 pseudocode
+
+### Priority 2 — Complete ADR set
+
+9. [ ] Resolve OQ-1 (build iOS Safari drag event prototype)
+10. [ ] Write ADR-0007 from OQ-1 findings
+
+### Priority 3 — Accept clean ADRs
+
+11. [ ] Mark ADR-0001, ADR-0002, ADR-0005, ADR-0006, ADR-0008, ADR-0011 → **Accepted**
+
+### After all above complete
+
+- [ ] Run `/create-control-manifest` (requires all ADRs Accepted)
+- [ ] Run `/gate-check pre-production`
+
+## Architecture Review Findings Summary
+
+**Verdict**: CONCERNS (42/58 covered · 11/58 partial · 5/58 gaps)
+
+**2 RED conflicts** requiring ADR updates:
+1. ADR-0003 Immobilized visual: grey shading → must be bold X in opponent colour
+2. ADR-0009 AI accuracy: spread-only → must add Gaussian pre-error + w_miss
+
+**4 engine findings** requiring ADR updates:
+- ADR-0003: `Line2D.antialiased = true` (Compatibility renderer has no hardware MSAA)
+- ADR-0003: `freeze()` needs `tween.kill()` not `set_meta()`
+- ADR-0010: `MOUSE_FILTER_IGNORE` does not cascade — specify per-node vs recursive
+- ADR-0010: `gui_release_focus()` required before hiding Control subtrees
+
+**1 naming issue**: StatusEffects API inconsistency between architecture.md and GDD
+
+**5 gaps**: All trace to ADR-0007 (blocked on OQ-1)
+
+**ADRs clear to Accept now**: ADR-0001, ADR-0002, ADR-0005, ADR-0006, ADR-0008, ADR-0011
+
+## Key Architecture Decisions (all established)
 
 - Canvas: 800×450 px, 16:9, Keep Aspect letterbox
-- Zone split: 40% P1 / 20% corridor / 40% P2
-- P1 anchor: Vector2(200, 338) | P2 anchor: Vector2(600, 338)
-- HUD strip: y 0–90 px
-- Gesture regions exclude HUD strip; ownership by drag origin
-- Portrait blocked (strict V_w < V_h)
-- 5 layout constants + EFFECT_DURATION_TURNS registered in entities.yaml
+- Compatibility renderer: `rendering/renderer/rendering_method.web = "gl_compatibility"`
+- No physics engine; analytic ray math for all hit detection
+- Single persistent scene (Main.tscn); all systems reset in-place for rematch
+- ScreenLayout and RngService as the only two Autoloads
+- TwoActionTurnSystem synchronous orchestrator; direct calls in critical path
+- `class_name FlickEvent extends RefCounted` — typed immutable value object
+- AI synthesises FlickEvent; joins at TwoActionTurnSystem.on_action_selected()
+- Line2D nodes for all rendering; hand-jitter baked at _ready(); `antialiased = true`
+- Player ink: P1 blue `Color(0.1, 0.2, 0.8)`, P2 red `Color(0.8, 0.1, 0.1)`
+- Tween fade for shot lines with is_instance_valid() guard; freeze() uses tween.kill()
+- WASM Memory Size = 128 MB; threads_enabled = false
+- CanvasLayer hierarchy: HUD=1, Menus=10, OrientationGate=20
+- GUT 4.x test framework; headless CI runner
+- Turn states: IDLE | TURN_START | AWAITING_FIRST_ACTION | ACTION_EXECUTING | AWAITING_SECOND_ACTION | TURN_END | AUTO_SKIP | HALTED
 
-### Status Effects key decisions
-- Tick model: counter=2, tick at turn START before action validation
-- counter=2 for 1 restricted turn (counter_initial = duration_turns × 2)
-- Both flags false + counter=2 both → auto-skip turn on tick (2→1, both still false)
-- Staggered counters → no auto-skip; restrictions expire independently
-- `set_disarmed` on already-disarmed player resets counter to 2 (idempotent)
-- Only writer: Body-Zone Hit Detection; only ticker: Turn System
-- Open questions: system architecture location (ADR); auto-skip indicator owner
+## Files Modified This Session
+
+- `docs/architecture/architecture-review-2026-05-10.md` — created (review report)
+- `docs/architecture/architecture-traceability.md` — created (full traceability matrix, 58 TR IDs)
+- `docs/architecture/tr-registry.yaml` — populated (58 TR IDs, all new)
+- `production/session-state/active.md` — this file
 
 <!-- STATUS -->
-Epic: Pre-Production
-Feature: Systems Design
-Task: Design individual GDDs (2/18)
+Epic: Technical Setup
+Feature: Architecture
+Task: Fix 9 ADR issues from architecture review, then write ADR-0007
 <!-- /STATUS -->
