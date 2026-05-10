@@ -20,162 +20,398 @@
 #             /architecture-review (Phase 4 — cross-ADR conflict baseline)
 #             /create-stories (to embed architectural constraints in stories)
 #             /dev-story (to check implementation against accepted stances)
-#
-# SEARCH PATTERNS (for skills using Grep):
-#   All state owners:       Grep pattern="^  - state:" path="docs/registry/architecture.yaml"
-#   Who owns player_health: Grep pattern="state: player_health"
-#   All signal contracts:   Grep pattern="pattern: signal"
-#   Budget for combat:      Grep pattern="system: combat"
-#   All forbidden patterns: Grep pattern="^  - pattern:" (forbidden_patterns section)
-#   Superseded entries:     Grep pattern="status: superseded"
 
 version: 1
-last_updated: ""
+last_updated: "2026-05-10"
 
-# ─── STATE OWNERSHIP ─────────────────────────────────────────────────────────
-# Who is the authoritative owner of each piece of shared game state.
-# Conflicts: two ADRs claiming to own the same state = data race / authority bug.
-#
-# Register state when it is READ or WRITTEN by more than one system.
-# Internal-only state (never accessed by another system) does not need to be registered.
-#
-# Required fields: state, owner_system, adr, interface, referenced_by[], added
-# interface: how other systems access this state (read-only property, method call,
-#   signal, shared resource, etc.) — this is the contract other ADRs depend on.
+# ─── STATE OWNERSHIP ─────────────────────────────────────────────────────────────────────────
 
-state_ownership: []
+state_ownership:
+  - state: active_game_state
+    status: active
+    owner_system: GameStateMachine
+    adr: docs/architecture/adr-0001-scene-topology.md
+    interface: "GameStateMachine.transition_to(state: StringName) — callers emit requests, GSM owns the transition"
+    write_access: GameStateMachine-only
+    referenced_by:
+      - docs/architecture/adr-0001-scene-topology.md
+    added: 2026-05-10
+    revised: ""
 
-# Example:
-#
-# state_ownership:
-#   - state: player_health
-#     status: active           # active | superseded_by: ADR-NNNN
-#     owner_system: health-system
-#     adr: docs/architecture/adr-0001-health-system.md
-#     interface: "HealthComponent.current_health (read-only float, range 0–max_health)"
-#     write_access: health-system-only   # only owner can write; others read
-#     referenced_by:
-#       - docs/architecture/adr-0001-health-system.md
-#       - docs/architecture/adr-0003-combat-system.md   # reads to apply damage
-#       - docs/architecture/adr-0007-ui-system.md       # reads to display HUD
-#     added: 2026-03-26
-#     revised: ""
+  - state: rng_stream
+    status: active
+    owner_system: RngService
+    adr: docs/architecture/adr-0006-rng-strategy.md
+    interface: "RngService.randf_range() / randi_range() / seed_rng() — all random calls go through RngService"
+    write_access: RngService-only
+    referenced_by:
+      - docs/architecture/adr-0006-rng-strategy.md
+      - docs/architecture/adr-0009-ai-pipeline.md
+    added: 2026-05-10
+    revised: ""
 
+  - state: figure_anchor_positions
+    status: active
+    owner_system: FigureGeometry
+    adr: docs/architecture/adr-0005-physics-policy.md
+    interface: "FigureGeometry.get_anchor(player_id) / set_anchor(player_id, pos) — sole writer is Movement via set_anchor()"
+    write_access: Movement-only (via FigureGeometry.set_anchor)
+    referenced_by:
+      - docs/architecture/adr-0005-physics-policy.md
+      - docs/architecture/adr-0009-ai-pipeline.md
+    added: 2026-05-10
+    revised: ""
 
-# ─── INTERFACE CONTRACTS ──────────────────────────────────────────────────────
-# How systems are required to communicate with each other.
-# Conflicts: one ADR expects signal, another expects direct call = integration bug.
-#
-# Register a contract when the communication pattern between two systems is
-# explicitly decided in an ADR and other systems must follow the same pattern.
-#
-# pattern options: signal | direct_call | event_bus | shared_resource | rpc | none
-
-interfaces: []
-
-# Example:
-#
-# interfaces:
-#   - contract: damage_delivery
-#     status: active
-#     pattern: signal          # how the producer notifies consumers
-#     producer: combat-system
-#     consumers:
-#       - health-system        # receives damage_dealt signal, applies to health
-#       - ui-system            # receives damage_dealt signal, shows damage number
-#       - audio-system         # receives damage_dealt signal, plays SFX
-#     adr: docs/architecture/adr-0003-combat-system.md
-#     signal_signature: "damage_dealt(amount: float, target: Node, is_crit: bool)"
-#     referenced_by:
-#       - docs/architecture/adr-0003-combat-system.md
-#       - docs/architecture/adr-0001-health-system.md
-#     added: 2026-03-26
-#     revised: ""
+  - state: status_effect_counters
+    status: active
+    owner_system: StatusEffects
+    adr: docs/architecture/adr-0004-system-communication.md
+    interface: "StatusEffects.set_disarmed(player_id) / set_immobilized(player_id) / tick_effects(player_id) / reset_all() / can_fire(player_id) / can_move(player_id)"
+    write_access: TwoActionTurnSystem-only (via set_disarmed/set_immobilized/tick_effects)
+    referenced_by:
+      - docs/architecture/adr-0004-system-communication.md
+    added: 2026-05-10
+    revised: ""
 
 
-# ─── PERFORMANCE BUDGETS ──────────────────────────────────────────────────────
-# Frame time allocations per system, against a defined total frame budget.
-# Conflicts: allocations that sum to more than the total budget = unshippable.
-#
-# Register a budget when an ADR explicitly claims a frame time allocation.
-# The registry lets /architecture-review verify the total doesn't exceed the target.
+# ─── INTERFACE CONTRACTS ────────────────────────────────────────────────────────────────────
 
-performance_budgets: []
+interfaces:
+  - contract: scene_state_transition
+    status: active
+    pattern: direct_call
+    producer: any-system
+    consumers:
+      - GameStateMachine
+    adr: docs/architecture/adr-0001-scene-topology.md
+    signal_signature: "GameStateMachine.transition_to(state: StringName) — states: MENU, IN_MATCH, RESULT"
+    notes: "Never call change_scene_to_file() or PackedScene.instantiate() mid-session. Use show()/hide() on CanvasLayer nodes only. Always call gui_release_focus() before hide()."
+    referenced_by:
+      - docs/architecture/adr-0001-scene-topology.md
+    added: 2026-05-10
+    revised: ""
 
-# Example:
-#
-# performance_budgets:
-#   - target_fps: 60
-#     total_frame_budget_ms: 16.6
-#     platform: PC             # PC | Console | Mobile | All
-#     adr: docs/architecture/adr-0000-performance-targets.md
-#     added: 2026-03-26
-#     revised: ""
-#
-#   - system: combat
-#     status: active
-#     budget_ms: 2.0
-#     adr: docs/architecture/adr-0003-combat-system.md
-#     notes: "Includes physics queries, hitbox evaluation, and damage calculation"
-#     referenced_by:
-#       - docs/architecture/adr-0003-combat-system.md
-#     added: 2026-03-26
-#     revised: ""
+  - contract: shot_resolution_critical_path
+    status: active
+    pattern: direct_call
+    producer: TwoActionTurnSystem
+    consumers:
+      - ShotSpreadCalculation
+      - BodyZoneHitDetection
+      - StatusEffects
+      - WinCondition
+    adr: docs/architecture/adr-0004-system-communication.md
+    signal_signature: "on_action_selected(action_type: StringName, flick_event: FlickEvent) — synchronous; no signals in this chain"
+    notes: "Pattern A: all calls in shot → hit → win chain are synchronous direct calls. No CONNECT_DEFERRED. No signals within this path."
+    referenced_by:
+      - docs/architecture/adr-0004-system-communication.md
+    added: 2026-05-10
+    revised: ""
 
-
-# ─── API DECISIONS ───────────────────────────────────────────────────────────
-# Which engine APIs are chosen for which purpose across the project.
-# Conflicts: two ADRs using different APIs for the same purpose = inconsistent
-# implementation that breaks when one system expects the other's API.
-#
-# Register an API decision when the choice is non-obvious and other ADRs might
-# make a different choice for the same purpose without knowing this was decided.
-
-api_decisions: []
-
-# Example:
-#
-# api_decisions:
-#   - purpose: physics_raycast
-#     status: active
-#     api: PhysicsServer3D.space_get_direct_state()
-#     not: RayCast3D node     # explicitly banned for this purpose
-#     adr: docs/architecture/adr-0002-physics-architecture.md
-#     reason: "Direct server calls avoid per-frame node overhead; 3× faster in profiling"
-#     referenced_by:
-#       - docs/architecture/adr-0002-physics-architecture.md
-#       - docs/architecture/adr-0003-combat-system.md
-#     added: 2026-03-26
-#     revised: ""
+  - contract: match_lifecycle_signals
+    status: active
+    pattern: signal
+    producer: WinCondition
+    consumers:
+      - GameModeManager
+    adr: docs/architecture/adr-0004-system-communication.md
+    signal_signature: "match_won(winner_id: int) — WinCondition → GameModeManager (sole listener); then match_ended(winner_id, config) → GameStateMachine"
+    notes: "Pattern B: typed signals for cross-layer notifications. No string-based connect()."
+    referenced_by:
+      - docs/architecture/adr-0004-system-communication.md
+    added: 2026-05-10
+    revised: ""
 
 
-# ─── FORBIDDEN PATTERNS ──────────────────────────────────────────────────────
-# Architecture anti-patterns explicitly banned by accepted ADRs.
-# When writing a new ADR, check this list — if the proposed approach matches
-# a forbidden pattern, it must be reworked before the ADR can be Accepted.
-#
-# Register a pattern when an ADR explicitly bans it AND other ADRs might
-# unknowingly use it (i.e., it's a tempting but wrong approach for this project).
+# ─── PERFORMANCE BUDGETS ───────────────────────────────────────────────────────────────────
 
-forbidden_patterns: []
+performance_budgets:
+  - target_fps: 60
+    total_frame_budget_ms: 16.6
+    platform: Web
+    adr: docs/architecture/adr-0002-web-export-memory.md
+    added: 2026-05-10
+    revised: ""
 
-# Example:
-#
-# forbidden_patterns:
-#   - pattern: autoload_singleton_coupling
-#     status: active
-#     description: "Systems must not directly reference Autoload singletons by name.
-#       Use dependency injection or signals instead."
-#     why: "Tight coupling to Autoloads makes systems untestable in isolation and
-#       creates hidden dependencies that break when Autoload load order changes."
-#     adr: docs/architecture/adr-0001-health-system.md
-#     added: 2026-03-26
-#
-#   - pattern: direct_cross_system_state_write
-#     status: active
-#     description: "A system must never write to state owned by another system.
-#       Use signals or method calls on the owner instead."
-#     why: "Direct state writes create race conditions and break the state
-#       ownership model. The owning system must be the sole writer."
-#     adr: docs/architecture/adr-0000-architecture-principles.md
-#     added: 2026-03-26
+  - system: all-systems
+    status: active
+    budget_memory_mb: 128
+    platform: Web
+    adr: docs/architecture/adr-0002-web-export-memory.md
+    notes: "WASM memory cap hard-set to 128 MB in export preset. Projected peak usage ~37–48 MB. New systems adding significant assets require explicit memory budget review."
+    referenced_by:
+      - docs/architecture/adr-0002-web-export-memory.md
+    added: 2026-05-10
+    revised: ""
+
+
+# ─── API DECISIONS ─────────────────────────────────────────────────────────────────────────
+
+api_decisions:
+  - purpose: ui_state_visibility
+    status: active
+    api: "CanvasLayer.show() / CanvasLayer.hide() — always preceded by get_viewport().gui_release_focus()"
+    not: "change_scene_to_file(), PackedScene.instantiate() mid-session"
+    adr: docs/architecture/adr-0001-scene-topology.md
+    reason: "change_scene_to_file() triggers WebGL shader recompilation hitches; hide/show is instant"
+    referenced_by:
+      - docs/architecture/adr-0001-scene-topology.md
+    added: 2026-05-10
+    revised: ""
+
+  - purpose: rendering_primitive
+    status: active
+    api: "Line2D nodes with antialiased = true — the sole rendering primitive for figures and trajectories"
+    not: "Sprite2D, Polygon2D (filled), draw_line() in _draw(), AnimationPlayer"
+    adr: docs/architecture/adr-0003-rendering-primitives.md
+    reason: "Single primitive type; per-segment visibility/modulate for status effects; antialiased = true required (no hardware MSAA in Compatibility renderer)"
+    referenced_by:
+      - docs/architecture/adr-0003-rendering-primitives.md
+    added: 2026-05-10
+    revised: ""
+
+  - purpose: flick_event_type
+    status: active
+    api: "class_name FlickEvent extends RefCounted — direction: Vector2 (normalised), power: float [0,1], timestamp: int"
+    not: "Dictionary, Array, or inline parameters for shot direction + power data"
+    adr: docs/architecture/adr-0008-flick-event-contract.md
+    reason: "Typed value object enforces invariants at construction; type-safe across all producers (human, AI) and consumers (TurnSystem, ShotSpread, tests)"
+    referenced_by:
+      - docs/architecture/adr-0008-flick-event-contract.md
+      - docs/architecture/adr-0009-ai-pipeline.md
+    added: 2026-05-10
+    revised: ""
+
+  - purpose: ai_shot_pipeline_entry_point
+    status: active
+    api: "TwoActionTurnSystem.on_action_selected(&'FIRE', synthesised_flick_event) — AI joins human pipeline here; no separate AI shot path"
+    not: "Direct calls from AI to BodyZoneHitDetection, StatusEffects, or WinCondition"
+    adr: docs/architecture/adr-0009-ai-pipeline.md
+    reason: "Single shot resolution path ensures AI fairness is provable by inspection; bugs affect human and AI equally"
+    referenced_by:
+      - docs/architecture/adr-0009-ai-pipeline.md
+    added: 2026-05-10
+    revised: ""
+
+  - purpose: ai_accuracy_model
+    status: active
+    api: "Two-layer model: Gaussian pre-error (Box-Muller, sigma=accuracy_spread_deg) applied to ideal direction before FlickEvent construction, then apply_spread() on top"
+    not: "Single uniform spread layer only; random direction without Gaussian distribution"
+    adr: docs/architecture/adr-0009-ai-pipeline.md
+    reason: "Gaussian distribution matches realistic aim error; two layers stack for cumulative difficulty scaling; w_miss provides deliberate miss behaviour at low difficulty"
+    referenced_by:
+      - docs/architecture/adr-0009-ai-pipeline.md
+    added: 2026-05-10
+    revised: ""
+
+  - purpose: test_framework
+    status: active
+    api: "GUT 4.x addon (addons/gut/); runner: godot --headless --script tests/gdunit4_runner.gd"
+    not: "Custom --script test runners without GUT, NUnit, or any non-GDScript test framework"
+    adr: docs/architecture/adr-0011-test-framework.md
+    reason: "GUT is the community standard for GDScript testing; specified in technical-preferences.md"
+    referenced_by:
+      - docs/architecture/adr-0011-test-framework.md
+    added: 2026-05-10
+    revised: ""
+
+  - purpose: canvas_layer_order
+    status: active
+    api: "HUD: CanvasLayer layer=1 (MOUSE_FILTER_IGNORE per-node on all display Controls); Menus: layer=10; OrientationGate: layer=20"
+    not: "Single CanvasLayer for all UI, or z_index on Node2D for UI ordering; MOUSE_FILTER_IGNORE on parent only"
+    adr: docs/architecture/adr-0010-hud-control-focus.md
+    reason: "Separate CanvasLayers per concern guarantee z-order; MOUSE_FILTER_IGNORE does not cascade in Godot 4.5+ — must be set per-node"
+    referenced_by:
+      - docs/architecture/adr-0010-hud-control-focus.md
+    added: 2026-05-10
+    revised: ""
+
+  - purpose: inter_system_communication_critical_path
+    status: active
+    api: "Synchronous direct GDScript method calls (Pattern A) — shot pipeline: FlickEvent → ShotSpreadCalculation.apply_spread() → BodyZoneHitDetection.detect() → WinCondition.check()"
+    not: "Signals, deferred calls, or CONNECT_DEFERRED in the shot resolution chain"
+    adr: docs/architecture/adr-0004-system-communication.md
+    reason: "Shot result must be fully resolved before any frame is drawn; async signals would split resolution across frames"
+    referenced_by:
+      - docs/architecture/adr-0004-system-communication.md
+    added: 2026-05-10
+    revised: ""
+
+  - purpose: inter_system_communication_cross_layer
+    status: active
+    api: "Typed Godot signals via signal.connect(callable) — for match lifecycle events (match_won, match_ready, match_ended, turn_started, turn_ended, state_changed)"
+    not: "String-based connect(), event bus, polling in _process()"
+    adr: docs/architecture/adr-0004-system-communication.md
+    reason: "Decouples producer from consumer for cross-layer notifications; string-based connect() is deprecated since 4.0"
+    referenced_by:
+      - docs/architecture/adr-0004-system-communication.md
+    added: 2026-05-10
+    revised: ""
+
+  - purpose: hit_detection_method
+    status: active
+    api: "Pure GDScript analytic math — ray_vs_circle() for HEAD, ray_vs_aabb() for ARMS/LEGS — static functions in BodyZoneHitDetection"
+    not: "PhysicsServer2D.space_get_direct_state(), RayCast2D node, Area2D + CollisionShape2D"
+    adr: docs/architecture/adr-0005-physics-policy.md
+    reason: "Analytic math is deterministic, unit-testable without physics server context, and faster for simple stationary shapes"
+    referenced_by:
+      - docs/architecture/adr-0005-physics-policy.md
+    added: 2026-05-10
+    revised: ""
+
+  - purpose: rng_source
+    status: active
+    api: "RngService Autoload — RngService.randf_range() and RngService.randi_range() — seeded via RngService.seed_rng()"
+    not: "RandomNumberGenerator.new() in any system other than rng_service.gd"
+    adr: docs/architecture/adr-0006-rng-strategy.md
+    reason: "Single shared RNG source enables deterministic testing with fixed seed; multiple independent RNG instances cannot be seeded together"
+    referenced_by:
+      - docs/architecture/adr-0006-rng-strategy.md
+    added: 2026-05-10
+    revised: ""
+
+  - purpose: shot_line_freeze
+    status: active
+    api: "freeze() calls tween.kill() on each stored Tween ref (guarded by is_instance_valid(tw)); _active_tweens: Array stores Tween refs"
+    not: "line.set_meta(&'frozen', true) — set_meta() has no effect on a running Tween"
+    adr: docs/architecture/adr-0003-rendering-primitives.md
+    reason: "set_meta() does not stop Tween timers; tween.kill() is required to prevent shot lines being freed during HALTED state"
+    referenced_by:
+      - docs/architecture/adr-0003-rendering-primitives.md
+    added: 2026-05-10
+    revised: ""
+
+  - purpose: renderer_choice
+    status: active
+    api: "Compatibility renderer (gl_compatibility) — rendering/renderer/rendering_method.web = 'gl_compatibility'"
+    not: "Forward+, Mobile renderer"
+    adr: docs/architecture/adr-0002-web-export-memory.md
+    reason: "Only Compatibility supports WebGL 2; Forward+ is not available on web target"
+    referenced_by:
+      - docs/architecture/adr-0002-web-export-memory.md
+    added: 2026-05-10
+    revised: ""
+
+  - purpose: autoload_policy
+    status: active
+    api: "ScreenLayout (constants), RngService (seeded RNG) — the only two Autoloads"
+    not: "Any additional Autoload without a new accepted ADR explicitly authorising it"
+    adr: docs/architecture/adr-0001-scene-topology.md
+    reason: "Autoloads create hidden dependencies and complicate unit testing; strictly limited"
+    referenced_by:
+      - docs/architecture/adr-0001-scene-topology.md
+    added: 2026-05-10
+    revised: ""
+
+  - purpose: status_effects_method_names
+    status: active
+    api: "set_disarmed(player_id) / set_immobilized(player_id) / tick_effects(player_id) / reset_all() / can_fire(player_id) / can_move(player_id)"
+    not: "apply(player_id, effect_type) / tick(player_id) / reset() — these generic names are banned on StatusEffects"
+    adr: docs/architecture/adr-0004-system-communication.md
+    reason: "Specific method names match GDD, are self-documenting, and prevent confusion with reset_all() on other systems"
+    referenced_by:
+      - docs/architecture/adr-0004-system-communication.md
+    added: 2026-05-10
+    revised: ""
+
+
+# ─── FORBIDDEN PATTERNS ─────────────────────────────────────────────────────────────────────────
+
+forbidden_patterns:
+  - pattern: ai_separate_shot_path
+    status: active
+    description: "AI must not call BodyZoneHitDetection, StatusEffects, or WinCondition directly for shot resolution. AI must call TwoActionTurnSystem.on_action_selected() with a synthesised FlickEvent."
+    why: "Separate AI shot path would make AI unverifiably unfair and duplicate the shot resolution logic, creating a regression risk."
+    adr: docs/architecture/adr-0009-ai-pipeline.md
+    added: 2026-05-10
+
+  - pattern: hud_control_intercepts_gesture_input
+    status: active
+    description: "HUD nodes (Label, TextureRect, icons) must have mouse_filter = MOUSE_FILTER_IGNORE set on each node individually. No HUD node may intercept input events during a match. Setting MOUSE_FILTER_IGNORE on a parent only does not cascade to children."
+    why: "Gesture regions overlap with the HUD strip; any HUD node intercepting input would block FIRE/MOVE gestures. MOUSE_FILTER_IGNORE does not cascade in Godot 4.5+."
+    adr: docs/architecture/adr-0010-hud-control-focus.md
+    added: 2026-05-10
+
+  - pattern: hide_without_release_focus
+    status: active
+    description: "Any code path that calls hide() or sets visible = false on a Control or CanvasLayer subtree must first call get_viewport().gui_release_focus()."
+    why: "Godot 4.6 dual-focus system tracks mouse/touch and keyboard/gamepad focus independently. Hidden nodes do not auto-release keyboard focus, creating invisible tab-stop bugs."
+    adr: docs/architecture/adr-0001-scene-topology.md
+    added: 2026-05-10
+
+  - pattern: string_based_signal_connect
+    status: active
+    description: "connect(\"signal_name\", object, \"method_name\") must not be used anywhere. Use signal.connect(callable) only."
+    why: "String-based connect() is deprecated since Godot 4.0. Callable connections are type-safe and refactor-friendly."
+    adr: docs/architecture/adr-0004-system-communication.md
+    added: 2026-05-10
+
+  - pattern: physics_server_for_hit_detection
+    status: active
+    description: "PhysicsServer2D.space_get_direct_state(), RayCast2D, Area2D, and CollisionShape2D must not be used for shot/hit zone detection."
+    why: "Analytic ray math (ADR-0005) is deterministic, testable without physics server context, and correct for the game's simple stationary hit zones."
+    adr: docs/architecture/adr-0005-physics-policy.md
+    added: 2026-05-10
+
+  - pattern: own_rng_instance
+    status: active
+    description: "RandomNumberGenerator.new() must not be called outside rng_service.gd. All random calls use RngService.randf_range() / randi_range()."
+    why: "Multiple independent RNG instances cannot be co-seeded for deterministic testing. RngService is the single seedable RNG source."
+    adr: docs/architecture/adr-0006-rng-strategy.md
+    added: 2026-05-10
+
+  - pattern: modulate_for_color_assignment
+    status: active
+    description: "Do not use node.modulate to assign player ink colour. Use Line2D.default_color for colour assignment. modulate is reserved for alpha-fade operations (Tween-based shot line fade)."
+    why: "modulate tints multiplicatively on top of default_color; using both for different purposes creates compounding bugs where the alpha tween fights the colour tint."
+    adr: docs/architecture/adr-0003-rendering-primitives.md
+    added: 2026-05-10
+
+  - pattern: physics_nodes_in_scene
+    status: active
+    description: "No RigidBody2D, CharacterBody2D, StaticBody2D, or CollisionShape2D nodes in the scene tree. PhysicsServer2D methods must not be called."
+    why: "All collision is analytic ray math (ADR-0005). Physics engine sits idle — physics nodes would waste memory and create false dependencies."
+    adr: docs/architecture/adr-0002-web-export-memory.md
+    added: 2026-05-10
+
+  - pattern: dynamic_scene_loading_mid_session
+    status: active
+    description: "change_scene_to_file(), PackedScene.instantiate(), and SceneTree.change_scene_to_packed() must not be called after startup. All scenes live in Main.tscn from load time."
+    why: "WebGL 2 / Compatibility renderer compiles shaders lazily; mid-session scene loads cause visible frame hitches in browser. Single persistent scene avoids this entirely."
+    adr: docs/architecture/adr-0001-scene-topology.md
+    added: 2026-05-10
+
+  - pattern: unauthorized_autoload
+    status: active
+    description: "No Autoload beyond ScreenLayout and RngService without an accepted ADR explicitly authorising it."
+    why: "Autoloads create global mutable state and hidden coupling between systems, making unit testing fragile and load-order errors hard to debug."
+    adr: docs/architecture/adr-0001-scene-topology.md
+    added: 2026-05-10
+
+  - pattern: freeze_via_set_meta
+    status: active
+    description: "Do not use line.set_meta(&'frozen', true) to pause shot line fade. Always store Tween references and call tween.kill() in freeze()."
+    why: "set_meta() has no effect on running Tweens. The fade timer continues and frees the Line2D node, violating the freeze contract (shot lines must persist during HALTED state)."
+    adr: docs/architecture/adr-0003-rendering-primitives.md
+    added: 2026-05-10
+
+  - pattern: immobilized_grey_shading
+    status: active
+    description: "Do not use modulate = Color(0.4, 0.4, 0.4) for Immobilized visual state. Use a bold X overlay through the legs rect in the opponent's ink colour."
+    why: "Grey shading conflicts with Figure Renderer GDD acceptance criteria. The GDD specifies an X overlay (same treatment as Disarmed), not grey shading."
+    adr: docs/architecture/adr-0003-rendering-primitives.md
+    added: 2026-05-10
+
+  - pattern: ai_single_spread_layer
+    status: active
+    description: "Do not implement AI accuracy as a single uniform spread_deg only. The two-layer model (Gaussian pre-error + apply_spread) is required."
+    why: "Single uniform spread does not match the Gaussian accuracy curve specified in the AI Targeting GDD. Difficulty scaling depends on the Gaussian pre-error layer."
+    adr: docs/architecture/adr-0009-ai-pipeline.md
+    added: 2026-05-10
+
+  - pattern: ai_zone_weights_without_miss
+    status: active
+    description: "AIDifficultyConfig zone_weights must include a w_miss key (&'MISS'). Zone weights for HEAD/ARMS/LEGS only (no MISS) are not permitted."
+    why: "w_miss is a first-class difficulty parameter in the AI Targeting GDD. Without it, Easy AI always tries to hit, eliminating intentional breathing room for new players."
+    adr: docs/architecture/adr-0009-ai-pipeline.md
+    added: 2026-05-10
