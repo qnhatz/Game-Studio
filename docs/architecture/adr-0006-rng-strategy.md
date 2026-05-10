@@ -1,7 +1,7 @@
 # ADR-0006: RNG Strategy
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-05-10

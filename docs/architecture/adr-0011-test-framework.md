@@ -1,7 +1,7 @@
 # ADR-0011: Test Framework Integration
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-05-10

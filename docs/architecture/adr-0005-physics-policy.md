@@ -1,7 +1,7 @@
 # ADR-0005: Physics Policy
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-05-10

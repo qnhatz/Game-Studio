@@ -1,7 +1,7 @@
 # ADR-0001: Scene Topology and System Lifecycle
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-05-10

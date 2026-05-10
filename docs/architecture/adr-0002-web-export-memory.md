@@ -1,7 +1,7 @@
 # ADR-0002: Web Export and Memory Strategy
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-05-10

@@ -1,7 +1,7 @@
 # ADR-0008: FlickEvent Contract
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-05-10
