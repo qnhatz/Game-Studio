@@ -1,7 +1,7 @@
 # ADR-0010: HUD and Control Focus Architecture
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-05-10
@@ -156,15 +156,15 @@ func _on_show() -> void:
 ### Button Tap Targets
 
 All buttons meet the ≥48×48 px accessibility minimum:
-- "2 Players" button: 220×60 px (custom_minimum_size)
-- "vs Computer" button: 220×60 px
+- “2 Players” button: 220×60 px (custom_minimum_size)
+- “vs Computer” button: 220×60 px
 - Difficulty buttons (Easy/Medium/Hard): 80×48 px each
 - Rematch / Menu buttons: 160×60 px
 
 ### Orientation Gate
 
 `OrientationGate` (CanvasLayer 20) is shown when `viewport.size.x < viewport.size.y`. It:
-1. Shows a "Rotate your device" label (centred)
+1. Shows a “Rotate your device” label (centred)
 2. Does NOT change GameStateMachine state — the game is paused in-place
 3. When landscape is restored, the gate hides and input resumes automatically
 

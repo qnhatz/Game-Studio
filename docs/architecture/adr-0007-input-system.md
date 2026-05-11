@@ -1,7 +1,7 @@
 # ADR-0007: Input System Architecture
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-05-11

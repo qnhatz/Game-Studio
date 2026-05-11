@@ -1,7 +1,7 @@
 # ADR-0003: Rendering Primitive Strategy
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-05-10
@@ -30,7 +30,7 @@ Proposed
 
 ### Problem Statement
 
-Flick Duel's "Notebook Duel" aesthetic requires stick figures and trajectory lines that look
+Flick Duel's “Notebook Duel” aesthetic requires stick figures and trajectory lines that look
 hand-drawn — clean but imperfect, as if sketched in ballpoint pen. We need to decide which Godot
 primitives implement this look, and how to manage their lifecycle (figure updates on anchor change,
 aim line during drag, persistent shot lines after release).
@@ -186,8 +186,8 @@ Well within the ≤50 draw call budget.
 ### Alternative B: `Sprite2D` with a hand-drawn texture atlas
 
 - **Description**: Pre-draw stick figure parts as sprites; compose at runtime
-- **Pros**: Maximum visual control; exact "hand-drawn" look from an artist
-- **Cons**: Requires texture assets (contradicts "geometric only" MVP scope); no easy runtime
+- **Pros**: Maximum visual control; exact “hand-drawn” look from an artist
+- **Cons**: Requires texture assets (contradicts “geometric only” MVP scope); no easy runtime
   colour-per-player without shaders; texture loading adds memory and import pipeline
 - **Rejection**: Out of scope for MVP; the Notebook Duel aesthetic is achievable with geometry alone
 
@@ -213,7 +213,7 @@ Well within the ≤50 draw call budget.
 ### Negative
 
 - Head rendered as a Line2D polygon (not a filled circle): slightly different look from the pen-flick
-  source material. Acceptable per art direction ("lines, not fills").
+  source material. Acceptable per art direction (“lines, not fills”).
 - Shot lines are dynamically created and freed: small allocation overhead per shot.
   At ≤2 shots per turn this is negligible but worth noting.
 

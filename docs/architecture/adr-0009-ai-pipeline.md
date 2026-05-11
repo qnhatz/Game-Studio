@@ -1,7 +1,7 @@
 # ADR-0009: AI Pipeline Architecture
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-05-10
@@ -49,7 +49,7 @@ AI's path joins the human's path and what the AI does before that join point.
 - AI applies Gaussian pre-error to the ideal direction vector before FlickEvent construction
 - AI uses same spread as human via ShotSpreadCalculation.apply_spread() (two-layer accuracy model)
 - AI move decision uses simple distance heuristics
-- AI cannot "cheat" by reading the human's planned actions or bypassing spread
+- AI cannot “cheat” by reading the human's planned actions or bypassing spread
 
 ## Decision
 
@@ -207,7 +207,7 @@ if game_mode_manager.is_ai(active_player):
 - **Description**: AI accuracy = single `spread_deg` passed to `ShotSpreadCalculation.apply_spread()`
 - **Pros**: Simpler implementation
 - **Cons**: Uniform spread distribution; GDD requires Gaussian. Difficulty scaling model is based
-  on the Gaussian layer. Without Gaussian pre-error, "Hard" AI with low spread_deg aims nearly
+  on the Gaussian layer. Without Gaussian pre-error, “Hard” AI with low spread_deg aims nearly
   perfectly every shot with only uniform noise, not the realistic Gaussian-bell accuracy curve.
 - **Rejection**: AI Targeting GDD explicitly specifies two-layer model; uniform spread alone
   does not produce the intended accuracy curve at any difficulty level
@@ -215,16 +215,16 @@ if game_mode_manager.is_ai(active_player):
 ### Alternative B: Separate AI shot resolution path
 
 - **Description**: AI bypasses TwoActionTurnSystem; directly calls BodyZoneHitDetection
-- **Pros**: Could allow AI to "cheat" if desired
+- **Pros**: Could allow AI to “cheat” if desired
 - **Cons**: Two code paths; impossible to verify AI fairness; GDD forbids this
-- **Rejection**: GDD TR-AIR-002 and architecture principle "AI uses same pipeline" forbid this
+- **Rejection**: GDD TR-AIR-002 and architecture principle “AI uses same pipeline” forbid this
 
 ### Alternative C: No w_miss (zone weights for HEAD/ARMS/LEGS only)
 
 - **Description**: Zone selection only between hit zones; no deliberate miss weight
 - **Pros**: Simpler weight dictionary
 - **Cons**: AI at Easy difficulty always tries to hit — just poorly. A dedicated `w_miss` weight
-  creates intentional "breathing room" turns where the AI visibly fires wide, which teaches the
+  creates intentional “breathing room” turns where the AI visibly fires wide, which teaches the
   player the game rhythm without punishing them unfairly at low difficulty.
 - **Rejection**: AI Targeting GDD specifies `w_miss` as a first-class difficulty parameter
 

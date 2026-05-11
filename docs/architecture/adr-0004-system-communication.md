@@ -1,7 +1,7 @@
 # ADR-0004: System Communication Architecture
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-05-10
@@ -178,8 +178,8 @@ The canonical method names match the Status Effects GDD (self-documenting, zone-
 - **Description**: Every system communication is a signal; shot resolution is async
 - **Pros**: Maximum decoupling
 - **Cons**: Shot resolution becomes non-deterministic — signals in Godot are deferred by default
-  when connected across threads (and can be deferred explicitly). For a game where "the shot
-  resolved before the frame draws" is a correctness requirement, async signals are wrong. Also
+  when connected across threads (and can be deferred explicitly). For a game where “the shot
+  resolved before the frame draws” is a correctness requirement, async signals are wrong. Also
   complicates unit testing of the shot pipeline.
 - **Rejection**: Synchronous determinism is a hard requirement for shot resolution
 
