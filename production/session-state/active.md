@@ -1,10 +1,10 @@
 # Session State — Flick Duel
 
-*Last updated: 2026-05-10*
+*Last updated: 2026-05-11*
 
 ## Current Task
 
-Priority 1 ADR fixes complete (all 8 items). Next: resolve OQ-1 (iOS Safari drag prototype), write ADR-0007, then mark clean ADRs as Accepted.
+ADR-0007 written (OQ-1 resolved by analysis). Priority 3 complete (ADR-0001/0002/0005/0006/0008/0011 Accepted). Next: run `/create-control-manifest`, then `/gate-check pre-production`.
 
 ## Status
 
@@ -18,19 +18,19 @@ Priority 1 ADR fixes complete (all 8 items). Next: resolve OQ-1 (iOS Safari drag
 - [x] Gate check passed (CONCERNS — proceed) — `Technical Setup` stage active
 - [x] `production/stage.txt` = `Technical Setup`
 - [x] Master architecture document — `docs/architecture/architecture.md` (v1.0, TD-APPROVED)
-- [x] All 11 ADRs written (ADR-0001–0006, ADR-0008–0011; ADR-0007 pending OQ-1)
+- [x] All 12 ADRs written (ADR-0001–0011, all complete)
 - [x] `/architecture-review` complete — CONCERNS verdict
   - Review report: `docs/architecture/architecture-review-2026-05-10.md`
   - Traceability index: `docs/architecture/architecture-traceability.md`
   - TR Registry: `docs/architecture/tr-registry.yaml` (58 IDs populated)
+- [x] ADR-0001, 0002, 0005, 0006, 0008, 0011 — **Accepted**
+- [x] ADR-0003, 0004, 0009, 0010 — Priority 1 fixes applied (still Proposed — accept after control manifest)
+- [x] ADR-0007 — Proposed (OQ-1 resolved; ready to Accept after control manifest)
 
-## Open Questions (must resolve before ADR-0007)
+## Open Questions
 
-- **OQ-1**: iOS Safari InputEventScreenDrag — does it fire continuously during drag or only on drag-end?
-  Resolve by building a one-page gesture prototype (just drag event logging) and testing on Safari iOS.
-  This unblocks ADR-0007 (Input System Architecture).
-- **OQ-2**: Godot 4.6 Compatibility renderer actual WASM memory baseline.
-  Measure with browser DevTools on a real export before marking ADR-0002 as Accepted.
+- **OQ-1**: RESOLVED — `InputEventScreenDrag` fires continuously on iOS Safari. Web export template calls `preventDefault()` on touchmove. Smoke test on real device still required before ship.
+- **OQ-2**: Godot 4.6 Compatibility renderer actual WASM memory baseline. Measure with browser DevTools on a real export before shipping.
 
 ## Required Actions Before Pre-Production Gate
 
@@ -47,12 +47,12 @@ Priority 1 ADR fixes complete (all 8 items). Next: resolve OQ-1 (iOS Safari drag
 
 ### Priority 2 — Complete ADR set
 
-9. [ ] Resolve OQ-1 (build iOS Safari drag event prototype)
-10. [ ] Write ADR-0007 from OQ-1 findings
+9. [x] Resolve OQ-1 (analysis: InputEventScreenDrag fires continuously on iOS Safari)
+10. [x] Write ADR-0007 — `docs/architecture/adr-0007-input-system.md`
 
 ### Priority 3 — Accept clean ADRs
 
-11. [ ] Mark ADR-0001, ADR-0002, ADR-0005, ADR-0006, ADR-0008, ADR-0011 → **Accepted**
+11. [x] Mark ADR-0001, ADR-0002, ADR-0005, ADR-0006, ADR-0008, ADR-0011 → **Accepted**
 
 ### After all above complete
 
@@ -63,21 +63,7 @@ Priority 1 ADR fixes complete (all 8 items). Next: resolve OQ-1 (iOS Safari drag
 
 **Verdict**: CONCERNS (42/58 covered · 11/58 partial · 5/58 gaps)
 
-**2 RED conflicts** requiring ADR updates:
-1. ADR-0003 Immobilized visual: grey shading → must be bold X in opponent colour
-2. ADR-0009 AI accuracy: spread-only → must add Gaussian pre-error + w_miss
-
-**4 engine findings** requiring ADR updates:
-- ADR-0003: `Line2D.antialiased = true` (Compatibility renderer has no hardware MSAA)
-- ADR-0003: `freeze()` needs `tween.kill()` not `set_meta()`
-- ADR-0010: `MOUSE_FILTER_IGNORE` does not cascade — specify per-node vs recursive
-- ADR-0010: `gui_release_focus()` required before hiding Control subtrees
-
-**1 naming issue**: StatusEffects API inconsistency between architecture.md and GDD
-
-**5 gaps**: All trace to ADR-0007 (blocked on OQ-1)
-
-**ADRs clear to Accept now**: ADR-0001, ADR-0002, ADR-0005, ADR-0006, ADR-0008, ADR-0011
+**All gaps trace to ADR-0007 (now written) — 5 TR-INP/TR-TVIS IDs are covered.**
 
 ## Key Architecture Decisions (all established)
 
@@ -96,16 +82,15 @@ Priority 1 ADR fixes complete (all 8 items). Next: resolve OQ-1 (iOS Safari drag
 - CanvasLayer hierarchy: HUD=1, Menus=10, OrientationGate=20
 - GUT 4.x test framework; headless CI runner
 - Turn states: IDLE | TURN_START | AWAITING_FIRST_ACTION | ACTION_EXECUTING | AWAITING_SECOND_ACTION | TURN_END | AUTO_SKIP | HALTED
+- InputSystem: unified mouse/touch pointer state machine; `_input()` + `_window_open` guard; mouse sentinel `_touch_id = -1`
 
 ## Files Modified This Session
 
-- `docs/architecture/architecture-review-2026-05-10.md` — created (review report)
-- `docs/architecture/architecture-traceability.md` — created (full traceability matrix, 58 TR IDs)
-- `docs/architecture/tr-registry.yaml` — populated (58 TR IDs, all new)
+- `docs/architecture/adr-0007-input-system.md` — created
 - `production/session-state/active.md` — this file
 
 <!-- STATUS -->
 Epic: Technical Setup
 Feature: Architecture
-Task: Resolve OQ-1 (iOS Safari drag prototype) → write ADR-0007 → mark ADRs Accepted
+Task: Run /create-control-manifest → /gate-check pre-production
 <!-- /STATUS -->
