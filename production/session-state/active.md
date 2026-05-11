@@ -4,7 +4,7 @@
 
 ## Current Task
 
-**Pre-Production phase active.** Gate passed 2026-05-11. Next: run `/create-epics layer: foundation` then `/create-epics layer: core`, then `/create-stories [epic-slug]` for each epic.
+**Pre-Production phase active.** Foundation epics written 2026-05-11. Next: run `/create-epics layer: core`, then `/create-stories [epic-slug]` for each epic.
 
 ## Status
 
@@ -28,6 +28,7 @@
 - [x] UX specs initialized — `design/ux/interaction-patterns.md`, `design/ux/main-menu.md`
 - [x] **`/gate-check pre-production` — PASS** (2026-05-11)
 - [x] **`production/stage.txt` = `Pre-Production`**
+- [x] Foundation epics written — `production/epics/` (screen-layout, status-effects, input-system, shot-spread-calculation)
 
 ## Open Questions
 
@@ -64,5 +65,5 @@
 <!-- STATUS -->
 Epic: Pre-Production
 Feature: Epics and Stories
-Task: Run /create-epics layer: foundation
+Task: Run /create-epics layer: core
 <!-- /STATUS -->
