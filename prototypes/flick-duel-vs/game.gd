@@ -23,7 +23,8 @@ const HIT_FLASH_SEC := 0.5
 const C_BG     := Color(0.961, 0.941, 0.910)
 const C_RULE   := Color(0.678, 0.847, 0.902, 0.35)
 const C_DIV    := Color(0.70, 0.70, 0.70)
-const C_P      := [Color(0.149, 0.278, 0.682), Color(0.741, 0.149, 0.149)]
+const C_P1     := Color(0.149, 0.278, 0.682)
+const C_P2     := Color(0.741, 0.149, 0.149)
 
 # --- Figure geometry (anchor = feet, y increases downward) ---
 const HEAD_OFF := Vector2(0.0, -145.0)
@@ -36,7 +37,7 @@ const LEGS_SZ  := Vector2(36.0, 72.0)
 enum Zone { HEAD, ARMS, LEGS, NONE }
 
 # --- Game state ---
-var anchors  := [Vector2(200.0, 390.0), Vector2(600.0, 390.0)]
+var anchors: Array[Vector2] = [Vector2(200.0, 390.0), Vector2(600.0, 390.0)]
 var turn     := 0
 var actions  := ACTIONS_PER_TURN
 var disabled : Array = [{}, {}]
@@ -102,8 +103,8 @@ func _draw_divider() -> void:
 			  Vector2(CANVAS_W * 0.5, CANVAS_H), C_DIV, 1.0)
 
 func _draw_figure(p: int) -> void:
-	var a := anchors[p]
-	var c := C_P[p]
+	var a: Vector2 = anchors[p]
+	var c: Color = _cp(p)
 
 	# Legs
 	var lc := a + LEGS_OFF
@@ -129,7 +130,7 @@ func _draw_zone_rect(r: Rect2, zone: Zone, p: int, c: Color) -> void:
 	var is_dis: bool = disabled[p][zone]
 	var flash := _flash_alpha(p, zone)
 	if flash > 0.0:
-		draw_rect(r, _a(C_P[1 - p], flash * 0.6))
+		draw_rect(r, _a(_cp(1 - p), flash * 0.6))
 	draw_rect(r, _a(c, 0.0 if is_dis else 0.08))
 	draw_rect(r, _a(c, 0.25 if is_dis else 1.0), false, 1.5)
 
@@ -137,7 +138,7 @@ func _draw_zone_circle(center: Vector2, radius: float, zone: Zone, p: int, c: Co
 	var is_dis: bool = disabled[p][zone]
 	var flash := _flash_alpha(p, zone)
 	if flash > 0.0:
-		draw_circle(center, radius, _a(C_P[1 - p], flash * 0.6))
+		draw_circle(center, radius, _a(_cp(1 - p), flash * 0.6))
 	draw_arc(center, radius, 0.0, TAU, 32, _a(c, 0.25 if is_dis else 1.0), 2.0)
 
 func _flash_alpha(p: int, zone: Zone) -> float:
@@ -149,8 +150,8 @@ func _flash_alpha(p: int, zone: Zone) -> float:
 func _draw_aim() -> void:
 	if gesture != GestureState.TRACKING or not g_from_fig:
 		return
-	var origin := anchors[turn]
-	var c := C_P[turn]
+	var origin: Vector2 = anchors[turn]
+	var c: Color = _cp(turn)
 	var drag_vec := g_pos - g_start
 	var dist := drag_vec.length()
 
@@ -183,7 +184,7 @@ func _draw_hud() -> void:
 	if winner >= 0:
 		return
 	var font := ThemeDB.fallback_font
-	var c := C_P[turn]
+	var c: Color = _cp(turn)
 
 	# Action dots
 	var dot_x := 28.0 if turn == 0 else CANVAS_W - 72.0
@@ -210,12 +211,12 @@ func _draw_hud() -> void:
 		var status := "  ".join(parts)
 		var sx := 10.0 if p == 0 else CANVAS_W - 160.0
 		draw_string(font, Vector2(sx, CANVAS_H - 8.0), status,
-					HORIZONTAL_ALIGNMENT_LEFT, -1, 11, _a(C_P[p], 0.75))
+					HORIZONTAL_ALIGNMENT_LEFT, -1, 11, _a(_cp(p), 0.75))
 
 func _draw_win_overlay() -> void:
 	draw_rect(Rect2(Vector2.ZERO, Vector2(CANVAS_W, CANVAS_H)), Color(0, 0, 0, 0.45))
 	var font := ThemeDB.fallback_font
-	var c := C_P[winner]
+	var c: Color = _cp(winner)
 	var name_str := "P1" if winner == 0 else "P2"
 	draw_string(font, Vector2(280.0, 210.0), name_str + " WINS",
 				HORIZONTAL_ALIGNMENT_LEFT, -1, 38, c)
@@ -224,6 +225,9 @@ func _draw_win_overlay() -> void:
 
 func _a(c: Color, a: float) -> Color:
 	return Color(c.r, c.g, c.b, a)
+
+func _cp(p: int) -> Color:
+	return C_P1 if p == 0 else C_P2
 
 # ---------- Input ----------
 
@@ -296,12 +300,12 @@ func _do_move(tap: Vector2) -> void:
 	_consume()
 
 func _do_fire(dir: Vector2) -> void:
-	var origin := anchors[turn]
+	var origin: Vector2 = anchors[turn]
 	var opp := 1 - turn
 	var end := origin + dir * _ray_edge_t(origin, dir)
 	var zone := _check_hit(origin, dir, opp)
 
-	shots.append({ "start": origin, "end": end, "color": C_P[turn], "t": SHOT_FADE_SEC })
+	shots.append({ "start": origin, "end": end, "color": _cp(turn), "t": SHOT_FADE_SEC })
 
 	if zone != Zone.NONE:
 		_apply_hit(opp, zone)
@@ -316,7 +320,7 @@ func _consume() -> void:
 
 func _apply_hit(p: int, zone: Zone) -> void:
 	disabled[p][zone] = true
-	flashes.append({ "player": p, "zone": zone, "color": C_P[1 - p], "t": HIT_FLASH_SEC })
+	flashes.append({ "player": p, "zone": zone, "color": _cp(1 - p), "t": HIT_FLASH_SEC })
 	if zone == Zone.HEAD or _all_disabled(p):
 		winner = 1 - p
 
@@ -344,7 +348,7 @@ func _ray_edge_t(origin: Vector2, dir: Vector2) -> float:
 	return t
 
 func _check_hit(origin: Vector2, dir: Vector2, opp: int) -> Zone:
-	var a := anchors[opp]
+	var a: Vector2 = anchors[opp]
 
 	if not disabled[opp][Zone.HEAD]:
 		if _ray_circle(origin, dir, a + HEAD_OFF, HEAD_R):
