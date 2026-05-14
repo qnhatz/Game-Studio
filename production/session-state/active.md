@@ -1,10 +1,10 @@
 # Session State — Flick Duel
 
-*Last updated: 2026-05-11*
+*Last updated: 2026-05-14*
 
 ## Current Task
 
-**Pre-Production phase active.** Foundation epics written 2026-05-11. Next: run `/create-epics layer: core`, then `/create-stories [epic-slug]` for each epic.
+**Vertical Slice prototype in progress.** Prototype built at `prototypes/flick-duel-vs/`. Next: open in Godot 4.6, playtest, and document findings in `production/playtests/`.
 
 ## Status
 
@@ -29,6 +29,9 @@
 - [x] **`/gate-check pre-production` — PASS** (2026-05-11)
 - [x] **`production/stage.txt` = `Pre-Production`**
 - [x] Foundation epics written — `production/epics/` (screen-layout, status-effects, input-system, shot-spread-calculation)
+- [x] Core epics written — `production/epics/` (figure-geometry, action-validation, trajectory-visualization, movement)
+- [x] `/gate-check production` — **FAIL** (2026-05-14) — blockers: no Vertical Slice, no playtests, no stories, no sprint plan, missing UX specs
+- [x] Vertical Slice prototype scaffolded — `prototypes/flick-duel-vs/` (Godot 4.6, GDScript, single-file)
 
 ## Open Questions
 
@@ -64,6 +67,6 @@
 
 <!-- STATUS -->
 Epic: Pre-Production
-Feature: Epics and Stories
-Task: Run /create-epics layer: core
+Feature: Vertical Slice
+Task: Playtest prototype and document findings
 <!-- /STATUS -->

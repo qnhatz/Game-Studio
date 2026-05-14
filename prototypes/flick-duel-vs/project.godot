@@ -1,0 +1,18 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the format may change between versions.
+
+config_version=5
+
+[application]
+
+config/name="Flick Duel VS — Prototype"
+run/main_scene="res://game.tscn"
+config/features=PackedStringArray("4.6", "GL Compatibility")
+
+[display]
+
+window/size/viewport_width=800
+window/size/viewport_height=450
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
