@@ -4,7 +4,7 @@
 > **GDD**: design/gdd/screen-layout.md
 > **Architecture Module**: `ScreenLayout` (Autoload)
 > **Status**: Ready
-> **Stories**: Not yet created — run `/create-stories screen-layout`
+> **Stories**: 5 stories — see table below
 
 ## Overview
 
@@ -43,6 +43,16 @@ This epic is complete when:
 - All Logic and Integration stories have passing test files in `tests/`
 - All Visual/Feel and UI stories have evidence docs with sign-off in `production/qa/evidence/`
 
+## Stories
+
+| # | Story | Type | Status | ADR |
+|---|-------|------|--------|-----|
+| 001 | [ScreenLayout Constants](story-001-screen-layout-constants.md) | Logic | Ready | ADR-0001, ADR-0002 |
+| 002 | [GESTURE_RECT Formula and Scaling](story-002-gesture-rect-scaling.md) | Logic | Ready | ADR-0002, ADR-0007 |
+| 003 | [Gesture Region Dead-Zone Filtering](story-003-gesture-dead-zone-filtering.md) | Integration | Ready | ADR-0007 |
+| 004 | [Orientation Gate — Portrait Block and Resume](story-004-orientation-gate.md) | Integration | Ready | ADR-0007, ADR-0010 |
+| 005 | [Multi-Touch Zone Isolation](story-005-multi-touch-zone-isolation.md) | Integration | Ready | ADR-0007 |
+
 ## Next Step
 
-Run `/create-stories screen-layout` to break this epic into implementable stories.
+Run `/story-readiness production/epics/screen-layout/story-001-screen-layout-constants.md` then `/dev-story` to begin implementation. Work through stories in order — each story's `Depends on:` field tells you what must be DONE first.
