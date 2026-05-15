@@ -4,6 +4,7 @@
 > **Status**: Ready
 > **Layer**: Foundation
 > **Type**: Logic
+> **Estimate**: 2 hours
 > **Manifest Version**: 2026-05-11
 
 ## Context
