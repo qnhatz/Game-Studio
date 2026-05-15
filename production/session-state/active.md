@@ -1,10 +1,10 @@
 # Session State — Flick Duel
 
-*Last updated: 2026-05-14*
+*Last updated: 2026-05-15*
 
 ## Current Task
 
-**Vertical Slice prototype in progress.** Prototype built at `prototypes/flick-duel-vs/`. Next: open in Godot 4.6, playtest, and document findings in `production/playtests/`.
+**Implementing screen-layout epic stories.** Story 001 (ScreenLayout Constants) implemented and committed. Next: `/code-review` then `/story-done`, then Story 002.
 
 ## Status
 
@@ -66,7 +66,14 @@
 - Accessibility: Standard tier (colorblind modes + scalable UI)
 
 <!-- STATUS -->
-Epic: Pre-Production
-Feature: Vertical Slice
-Task: Playtest prototype and document findings
+Epic: Screen Layout
+Feature: ScreenLayout Constants
+Task: Code review and story close
 <!-- /STATUS -->
+
+## Session Extract — /dev-story 2026-05-15
+- Story: production/epics/screen-layout/story-001-screen-layout-constants.md — ScreenLayout Constants
+- Files changed: project.godot, src/systems/screen_layout.gd, tests/unit/screen_layout/screen_layout_constants_test.gd
+- Test written: tests/unit/screen_layout/screen_layout_constants_test.gd (6 test functions)
+- Blockers: None
+- Next: /code-review src/systems/screen_layout.gd tests/unit/screen_layout/screen_layout_constants_test.gd then /story-done production/epics/screen-layout/story-001-screen-layout-constants.md
