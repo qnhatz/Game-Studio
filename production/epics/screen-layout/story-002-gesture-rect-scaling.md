@@ -1,7 +1,7 @@
 # Story 002: GESTURE_RECT Formula and Scaling
 
 > **Epic**: Screen Layout
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Foundation
 > **Type**: Logic
 > **Manifest Version**: 2026-05-11
@@ -114,3 +114,12 @@ window/stretch/aspect="keep"
 
 - Depends on: Story 001 must be DONE (constants required)
 - Unlocks: Story 003 (dead-zone filtering depends on GESTURE_RECT)
+
+---
+
+## Completion Notes
+**Completed**: 2026-05-15
+**Criteria**: 4/4 passing
+**Deviations**: None
+**Test Evidence**: `tests/unit/screen_layout/gesture_rect_scaling_test.gd` — 7 test functions
+**Code Review**: Skipped (lean mode, straightforward static functions)
