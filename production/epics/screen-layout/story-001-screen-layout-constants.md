@@ -1,7 +1,7 @@
 # Story 001: ScreenLayout Constants
 
 > **Epic**: Screen Layout
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Foundation
 > **Type**: Logic
 > **Estimate**: 2 hours
@@ -101,3 +101,12 @@ Do not derive these values from each other at runtime — they are compile-time 
 
 - Depends on: None (first Foundation story)
 - Unlocks: Story 002 (GESTURE_RECT and scaling depend on these constants), all other epics that reference ScreenLayout
+
+---
+
+## Completion Notes
+**Completed**: 2026-05-15
+**Criteria**: 4/4 passing
+**Deviations**: None
+**Test Evidence**: `tests/unit/screen_layout/screen_layout_constants_test.gd` — 7 test functions
+**Code Review**: Complete (APPROVED WITH SUGGESTIONS — doc comment and canvas-boundary test added)
