@@ -4,7 +4,15 @@
 > **GDD**: design/gdd/input-system.md
 > **Architecture Module**: `InputSystem` + `FlickEvent` (value object)
 > **Status**: Ready
-> **Stories**: Not yet created — run `/create-stories input-system`
+> **Stories**: 3 stories
+
+## Stories
+
+| # | Story | Type | Status | ADR |
+|---|-------|------|--------|-----|
+| 001 | FlickEvent Value Object | Logic | Ready | ADR-0008 |
+| 002 | InputSystem Pointer State Machine | Logic | Ready | ADR-0007 |
+| 003 | InputSystem Window Protocol and Orientation Gate | Integration | Ready | ADR-0007 |
 
 ## Overview
 
@@ -48,4 +56,4 @@ This epic is complete when:
 
 ## Next Step
 
-Run `/create-stories input-system` to break this epic into implementable stories.
+Run `/story-readiness production/epics/input-system/story-001-flick-event.md` then `/dev-story` to begin implementation.
