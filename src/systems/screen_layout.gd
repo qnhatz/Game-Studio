@@ -1,3 +1,4 @@
+## Spatial constants for the 800×450 game canvas. Read-only — no runtime state.
 class_name ScreenLayout
 extends Node
 

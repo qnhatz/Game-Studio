@@ -41,3 +41,12 @@ func test_screen_layout_p2_anchor_is_within_zone_and_below_hud() -> void:
 	assert_float(ScreenLayout.P2_ANCHOR.x).is_greater_equal(ScreenLayout.P2_ZONE.position.x)
 	assert_float(ScreenLayout.P2_ANCHOR.x).is_less(ScreenLayout.P2_ZONE.end.x)
 	assert_float(ScreenLayout.P2_ANCHOR.y).is_greater(float(ScreenLayout.HUD_H))
+
+
+func test_screen_layout_zones_fill_canvas_exactly() -> void:
+	# Zones flush with left/right canvas edges; all zone heights equal CANVAS_H
+	assert_float(ScreenLayout.P1_ZONE.position.x).is_equal(0.0)
+	assert_float(ScreenLayout.P2_ZONE.end.x).is_equal(float(ScreenLayout.CANVAS_W))
+	assert_float(ScreenLayout.P1_ZONE.size.y).is_equal(float(ScreenLayout.CANVAS_H))
+	assert_float(ScreenLayout.CORRIDOR.size.y).is_equal(float(ScreenLayout.CANVAS_H))
+	assert_float(ScreenLayout.P2_ZONE.size.y).is_equal(float(ScreenLayout.CANVAS_H))
