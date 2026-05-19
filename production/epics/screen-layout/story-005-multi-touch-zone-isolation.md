@@ -1,7 +1,7 @@
 # Story 005: Multi-Touch Zone Isolation
 
 > **Epic**: Screen Layout
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Foundation
 > **Type**: Integration
 > **Manifest Version**: 2026-05-11
@@ -113,3 +113,12 @@ Zone membership is only checked in `_on_pointer_down()`. Once a drag is in progr
 
 - Depends on: Story 003 must be DONE (zone membership logic in `_on_pointer_down()`); Story 004 must be DONE (orientation gate guard is in place)
 - Unlocks: None — this is the final screen-layout story
+
+---
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 3/3 implemented — no new code required (all three ACs satisfied by InputSystem Story 002 implementation)
+**Deviations**: None
+**Test Evidence**: `production/qa/evidence/multi-touch-isolation-evidence.md` — manual sign-off pending (requires multi-touch hardware or DevTools)
+**Code Review**: N/A — no new code
