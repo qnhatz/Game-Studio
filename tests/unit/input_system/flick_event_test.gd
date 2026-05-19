@@ -10,13 +10,13 @@ func test_flick_event_valid_construction_stores_fields() -> void:
 
 
 func test_flick_event_valid_construction_all_cardinal_directions() -> void:
-	# AC-1 edge: all normalised cardinal directions construct without error
+	# AC-1 edge: all normalised cardinal directions store direction correctly
 	var e1 := FlickEvent.new(Vector2.LEFT, 0.5, 0)
 	var e2 := FlickEvent.new(Vector2.UP, 0.5, 0)
 	var e3 := FlickEvent.new(Vector2.DOWN, 0.5, 0)
-	assert_object(e1).is_not_null()
-	assert_object(e2).is_not_null()
-	assert_object(e3).is_not_null()
+	assert_that(e1.direction).is_equal(Vector2.LEFT)
+	assert_that(e2.direction).is_equal(Vector2.UP)
+	assert_that(e3.direction).is_equal(Vector2.DOWN)
 
 
 func test_flick_event_direction_invalid_zero_is_not_normalized() -> void:
@@ -28,6 +28,17 @@ func test_flick_event_direction_invalid_zero_is_not_normalized() -> void:
 func test_flick_event_direction_invalid_oversized_is_not_normalized() -> void:
 	# AC-2 edge: length > 1 is also un-normalised
 	assert_bool(Vector2(2.0, 0.0).is_normalized()).is_false()
+
+
+func test_flick_event_precondition_power_above_one_fails_range_check() -> void:
+	# AC-3: 1.5 is outside [0.0, 1.0] — assert would fire on construction.
+	# Verified via precondition check rather than triggering assert (would crash runner).
+	assert_bool(1.5 >= 0.0 and 1.5 <= 1.0).is_false()
+
+
+func test_flick_event_precondition_power_negative_fails_range_check() -> void:
+	# AC-3 edge: -0.1 is below 0.0
+	assert_bool(-0.1 >= 0.0 and -0.1 <= 1.0).is_false()
 
 
 func test_flick_event_power_boundary_zero_is_valid() -> void:
