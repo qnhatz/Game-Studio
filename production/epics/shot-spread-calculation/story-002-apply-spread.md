@@ -1,7 +1,7 @@
 # Story 002: ShotSpreadCalculation.apply_spread()
 
 > **Epic**: Shot Spread Calculation
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Foundation
 > **Type**: Logic
 > **Manifest Version**: 2026-05-11
@@ -117,7 +117,16 @@ For tests that require determinism, call `RngService.seed_rng(FIXED_SEED)` befor
 **Story Type**: Logic
 **Required evidence**: `tests/unit/shot_spread/shot_spread_calculation_test.gd` — must exist and pass
 
-**Status**: [ ] Not yet created
+**Status**: [x] `tests/unit/shot_spread/shot_spread_calculation_test.gd` — 9 test functions
+
+---
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 7/7 passing (all ACs verified via unit tests)
+**Deviations**: None — implemented with `spread_deg` param for AI difficulty scaling per ADR-0009; `power` clamped to [0,1]; assert guards spread_deg >= MIN_SPREAD_DEG
+**Test Evidence**: `tests/unit/shot_spread/shot_spread_calculation_test.gd` — 9 test functions
+**Code Review**: Self-reviewed (lean mode) — CONCERNS resolved before commit
 
 ---
 
