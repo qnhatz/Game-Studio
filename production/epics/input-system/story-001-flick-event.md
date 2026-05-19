@@ -1,7 +1,7 @@
 # Story 001: FlickEvent Value Object
 
 > **Epic**: Input System
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Foundation
 > **Type**: Logic
 > **Estimate**: 1 hour
@@ -131,3 +131,12 @@ The file lives in `res://systems/` alongside `screen_layout.gd`. No scene file n
 
 - Depends on: None (must be first — all producers and consumers import this class)
 - Unlocks: Story 002 (InputSystem pointer state machine requires FlickEvent to construct events)
+
+---
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 5/5 passing
+**Deviations**: None
+**Test Evidence**: `tests/unit/input_system/flick_event_test.gd` — 11 test functions
+**Code Review**: Complete (APPROVED WITH SUGGESTIONS — AC-3 precondition tests added, cardinal direction assertions strengthened)
