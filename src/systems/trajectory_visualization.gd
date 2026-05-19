@@ -6,11 +6,19 @@ const CANVAS_RECT: Rect2 = Rect2(Vector2.ZERO, Vector2(800.0, 450.0))
 const SHOT_LINE_DISPLAY_MS: float = 2000.0
 const SHOT_LINE_FADE_MS: float = 600.0
 const MAX_VISIBLE_SHOT_LINES: int = 6
+const P1_COLOR: Color = Color("#1A4FBF")
+const P2_COLOR: Color = Color("#CC2200")
+const LINE_WIDTH: float = 3.0
+const AIM_LINE_ALPHA: float = 0.45
 
 ## Injected FigureGeometry reference. Must be set before any signal handler fires.
 var _figure_geometry: Node = null
 
+## Injected InputSystem reference. If set before _ready, signals are connected automatically.
+var _input_system: Node = null
+
 var _aim_line: Line2D
+var _active_color: Color = P1_COLOR
 var _shot_lines: Array[Line2D] = []
 var _shot_tweens: Array[Tween] = []
 var _frozen: bool = false
@@ -18,8 +26,20 @@ var _frozen: bool = false
 
 func _ready() -> void:
 	_aim_line = Line2D.new()
+	_aim_line.width = LINE_WIDTH
+	_aim_line.modulate.a = AIM_LINE_ALPHA
 	_aim_line.hide()
 	add_child(_aim_line)
+	if _input_system != null:
+		_input_system.aim_updated.connect(_on_aim_updated)
+		_input_system.aim_cancelled.connect(_on_aim_cancelled)
+		_input_system.flick_event_emitted.connect(_on_flick_event_emitted)
+
+
+## Sets the active player; updates aim and shot line colours accordingly.
+func set_active_player(player_id: int) -> void:
+	_active_color = P1_COLOR if player_id == 0 else P2_COLOR
+	_aim_line.default_color = _active_color
 
 
 ## Called when the player is actively dragging. Updates and shows the aim line.
@@ -46,7 +66,7 @@ func _on_aim_cancelled() -> void:
 func _on_flick_event_emitted(player_id: int, event: FlickEvent) -> void:
 	_aim_line.hide()
 	var anchor: Vector2 = _figure_geometry.get_anchor(player_id)
-	_draw_shot_line(anchor, event.direction, Color.WHITE)
+	_draw_shot_line(anchor, event.direction, _active_color)
 
 
 ## Draws a shot line from origin along resolved_dir to the canvas boundary, then fades it out.
