@@ -90,3 +90,9 @@ Task: Story 003 — Window Protocol
 - Story: production/epics/input-system/story-002-pointer-state-machine.md — InputSystem Pointer State Machine
 - Tech debt logged: None (advisory deviation documented inline — @onready deferred pending concrete classes)
 - Next recommended: production/epics/input-system/story-003-window-protocol.md
+
+## Session Extract — /story-done 2026-05-19 (Story 003)
+- Verdict: COMPLETE WITH NOTES
+- Story: production/epics/input-system/story-003-window-protocol.md — InputSystem Window Protocol and Orientation Gate
+- Tech debt logged: None
+- Next recommended: screen-layout stories 003, 004, 005 (now unblocked by input-system epic completion)

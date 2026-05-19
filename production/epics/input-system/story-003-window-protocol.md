@@ -1,7 +1,7 @@
 # Story 003: InputSystem Window Protocol and Orientation Gate
 
 > **Epic**: Input System
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Foundation
 > **Type**: Integration
 > **Estimate**: 2 hours
@@ -148,3 +148,12 @@ The test does not use `_input()` directly — send synthetic `InputEvent` object
 
 - Depends on: Story 002 (pointer state machine must be DONE — window protocol wraps it)
 - Unlocks: Screen-layout Story 003 (dead-zone filtering integration requires InputSystem with open window protocol complete); Screen-layout Story 004 (orientation gate integration requires this story's guard)
+
+---
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 4/4 passing
+**Deviations**: ADVISORY — `_orientation_gate` typed as `Node = null` with external injection; intentional pending concrete scene tree (consistent with _figure_geometry/_two_action_turn_system pattern)
+**Test Evidence**: `tests/integration/input_system/input_window_protocol_test.gd` — 18 test functions covering all 4 ACs
+**Code Review**: Complete (APPROVED WITH SUGGESTIONS — all SHOULD FIX items applied: _drag_start explicit init, AC-1 test routes through _input(), OrientationGateStub.visible comment)
