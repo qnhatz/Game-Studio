@@ -1,7 +1,7 @@
 # Story 001: RngService Autoload
 
 > **Epic**: Shot Spread Calculation
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Foundation
 > **Type**: Logic
 > **Manifest Version**: 2026-05-11
@@ -98,3 +98,10 @@ For unit tests, use `RngService.seed_rng(FIXED_SEED)` before each test that uses
 
 - Depends on: None
 - Unlocks: Story 002 (apply_spread requires RngService)
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 5/5 passing (all ACs verified via unit tests)
+**Deviations**: None
+**Test Evidence**: `tests/unit/shot_spread/rng_service_test.gd` — 9 test functions
+**Code Review**: Self-reviewed — thin wrapper, no ADR deviations, no non-trivial logic

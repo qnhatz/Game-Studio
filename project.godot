@@ -25,3 +25,4 @@ renderer/rendering_method.web="gl_compatibility"
 [autoload]
 
 ScreenLayout="*res://src/systems/screen_layout.gd"
+RngService="*res://src/systems/rng_service.gd"
