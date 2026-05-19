@@ -1,7 +1,7 @@
 # Story 002: Ray Intersection Tests
 
 > **Epic**: Figure Geometry
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Core
 > **Type**: Logic
 > **Manifest Version**: 2026-05-11
@@ -106,7 +106,16 @@ For the degenerate axis case, using `1e-10` (near-zero) as a guard avoids `INF` 
 **Story Type**: Logic
 **Required evidence**: `tests/unit/figure_geometry/figure_geometry_ray_intersection_test.gd` — must exist and pass
 
-**Status**: [ ] Not yet created
+**Status**: [x] `tests/unit/figure_geometry/figure_geometry_ray_intersection_test.gd` — 12 test functions
+
+---
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 7/7 passing (all ACs verified via unit tests)
+**Deviations**: None — added behind-origin guard to `_ray_hits_circle` (correctness fix beyond story scope) and normalized-direction assertion
+**Test Evidence**: `tests/unit/figure_geometry/figure_geometry_ray_intersection_test.gd` — 12 test functions
+**Code Review**: CONCERNS resolved — behind-origin false-positive bug fixed, direction assert added
 
 ---
 
