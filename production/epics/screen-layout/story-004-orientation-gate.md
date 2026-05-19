@@ -1,7 +1,7 @@
 # Story 004: Orientation Gate — Portrait Block and Resume
 
 > **Epic**: Screen Layout
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Foundation
 > **Type**: Integration
 > **Manifest Version**: 2026-05-11
@@ -139,3 +139,12 @@ func _on_orientation_changed() -> void:
 
 - Depends on: Story 003 must be DONE (orientation check layers on top of zone filtering); ADR-0010 (HUD/UI epic) CanvasLayer structure must exist
 - Unlocks: Story 005 (multi-touch isolation; both require a running InputSystem)
+
+---
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 4/4 implemented (manual sign-off PENDING — cannot run headlessly)
+**Deviations**: None
+**Test Evidence**: `production/qa/evidence/orientation-gate-evidence.md` — 4-AC manual checklist created; browser sign-off required before final release
+**Code Review**: Skipped — Lean mode
