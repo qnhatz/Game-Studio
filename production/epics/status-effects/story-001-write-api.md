@@ -1,7 +1,7 @@
 # Story 001: StatusEffects Write API and Initial State
 
 > **Epic**: Status Effects
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Foundation
 > **Type**: Logic
 > **Manifest Version**: 2026-05-11
@@ -142,3 +142,10 @@ Counter initial value of `2` is the designed mechanism: first tick (2→1) keeps
 
 - Depends on: None
 - Unlocks: Story 002 (tick_effects and reset_all depend on the write API being in place)
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 7/7 passing (all ACs verified via unit tests)
+**Deviations**: tick_effects and reset_all implemented in same file (Story 002 boundary) — logic is correct but tested by Story 002. Advisory only.
+**Test Evidence**: `tests/unit/status_effects/status_effects_write_api_test.gd` — 20 test functions
+**Code Review**: APPROVE — GDScript specialist, no issues
