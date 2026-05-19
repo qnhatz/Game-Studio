@@ -1,7 +1,7 @@
 # Story 001: Zone Accessors and Anchor Management
 
 > **Epic**: Figure Geometry
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Core
 > **Type**: Logic
 > **Manifest Version**: 2026-05-11
@@ -134,7 +134,16 @@ Use `StringName` constants (prefixed with `&`) for zone names to avoid per-call 
 **Story Type**: Logic
 **Required evidence**: `tests/unit/figure_geometry/figure_geometry_zone_accessors_test.gd` — must exist and pass
 
-**Status**: [ ] Not yet created
+**Status**: [x] `tests/unit/figure_geometry/figure_geometry_zone_accessors_test.gd` — 26 test functions
+
+---
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 9/9 passing (all ACs verified via unit tests)
+**Deviations**: None
+**Test Evidence**: `tests/unit/figure_geometry/figure_geometry_zone_accessors_test.gd` — 26 test functions
+**Code Review**: CONCERNS resolved — AC-6/7/8 tests rewritten to use accessors, test names corrected, `get_zone_centre` coverage added, `queue_free` → `free`
 
 ---
 
