@@ -28,6 +28,18 @@ var _two_action_turn_system: Node = null
 var _orientation_gate: Node = null
 
 
+func _ready() -> void:
+	if _orientation_gate != null:
+		_orientation_gate.visibility_changed.connect(_on_orientation_changed)
+
+
+func _on_orientation_changed() -> void:
+	if _orientation_gate != null and _orientation_gate.visible and _dragging:
+		_dragging = false
+		_window_open = false
+		aim_cancelled.emit()
+
+
 ## Called by TwoActionTurnSystem when it is ready to receive a human action.
 func open_window(player_id: int) -> void:
 	_active_player_id = player_id
