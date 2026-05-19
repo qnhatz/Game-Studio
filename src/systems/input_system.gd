@@ -15,7 +15,7 @@ var _active_player_id: int = -1
 ## -1 = mouse sentinel; any other value = owning touch index
 var _touch_id: int = -1
 var _dragging: bool = false
-var _drag_start: Vector2
+var _drag_start: Vector2 = Vector2.ZERO
 ## Cached canvas bounds — avoids constructing Vector2 on every drag event.
 var _canvas_size: Vector2 = Vector2(ScreenLayout.CANVAS_W, ScreenLayout.CANVAS_H)
 

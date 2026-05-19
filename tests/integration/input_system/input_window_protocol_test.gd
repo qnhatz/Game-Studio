@@ -17,6 +17,7 @@ class TurnSystemStub extends Node:
 
 
 ## Minimal node exposing a .visible property for the orientation gate.
+## Node has no native .visible (not a CanvasItem) — this member is safe to declare here.
 class OrientationGateStub extends Node:
 	var visible: bool = false
 
@@ -59,11 +60,20 @@ func test_input_system_window_closed_by_default_discards_pointer_down() -> void:
 	assert_bool(_system._dragging).is_false()
 
 
-func test_input_system_window_closed_emits_no_flick_event_on_pointer_up() -> void:
+func test_input_system_window_closed_emits_no_flick_event_via_input_events() -> void:
+	# Routes through _input() to exercise the _window_open gate, not _on_pointer_up directly
 	var emitted: Array[FlickEvent] = []
 	_system.flick_event_emitted.connect(func(_pid, ev): emitted.append(ev))
-	_system._on_pointer_down(-1, Vector2(200.0, 338.0))
-	_system._on_pointer_up(Vector2(250.0, 338.0))
+	var press := InputEventMouseButton.new()
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.pressed = true
+	press.position = Vector2(200.0, 338.0)
+	_system._input(press)
+	var release := InputEventMouseButton.new()
+	release.button_index = MOUSE_BUTTON_LEFT
+	release.pressed = false
+	release.position = Vector2(250.0, 338.0)
+	_system._input(release)
 	assert_int(emitted.size()).is_equal(0)
 
 
