@@ -1,7 +1,7 @@
 # Story 002: StatusEffects Tick and Reset
 
 > **Epic**: Status Effects
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Foundation
 > **Type**: Logic
 > **Manifest Version**: 2026-05-11
@@ -136,3 +136,10 @@ The two counter branches in `tick_effects` are fully independent — both fire/m
 
 - Depends on: Story 001 must be DONE (write API and state variables must exist)
 - Unlocks: All downstream consumers (ActionValidation, FigureRenderer, HUDTurnIndicator, GameStateMachine) can now reference the complete StatusEffects API
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 7/7 passing (all ACs verified via unit tests)
+**Deviations**: None
+**Test Evidence**: `tests/unit/status_effects/status_effects_tick_reset_test.gd` — 13 test functions
+**Code Review**: APPROVE — GDScript specialist, no issues
