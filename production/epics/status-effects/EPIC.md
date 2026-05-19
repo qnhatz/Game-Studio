@@ -4,7 +4,7 @@
 > **GDD**: design/gdd/status-effects.md
 > **Architecture Module**: `StatusEffects`
 > **Status**: Ready
-> **Stories**: Not yet created — run `/create-stories status-effects`
+> **Stories**: 2 stories created
 
 ## Overview
 
@@ -42,6 +42,13 @@ This epic is complete when:
 - All Logic and Integration stories have passing test files in `tests/`
 - All Visual/Feel and UI stories have evidence docs with sign-off in `production/qa/evidence/`
 
+## Stories
+
+| # | Story | Type | Status | ADR |
+|---|-------|------|--------|-----|
+| 001 | StatusEffects Write API and Initial State | Logic | Ready | ADR-0004 |
+| 002 | StatusEffects Tick and Reset | Logic | Ready | ADR-0004, ADR-0001 |
+
 ## Next Step
 
-Run `/create-stories status-effects` to break this epic into implementable stories.
+Run `/story-readiness production/epics/status-effects/story-001-write-api.md` then `/dev-story` to begin implementation.
