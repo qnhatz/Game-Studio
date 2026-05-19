@@ -70,6 +70,9 @@ func _input(event: InputEvent) -> void:
 func _on_pointer_down(touch_id: int, pos: Vector2) -> void:
 	if _dragging:
 		return
+	var zone: Rect2 = ScreenLayout.P1_ZONE if _active_player_id == 0 else ScreenLayout.P2_ZONE
+	if not ScreenLayout.GESTURE_RECT(zone).has_point(pos):
+		return
 	var anchor: Vector2 = _figure_geometry.get_anchor(_active_player_id)
 	if pos.distance_to(anchor) > FIGURE_DRAG_RADIUS_PX:
 		return
