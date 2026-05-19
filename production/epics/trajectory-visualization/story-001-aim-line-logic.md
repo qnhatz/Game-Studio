@@ -1,7 +1,7 @@
 # Story 001: Aim Line Logic
 
 > **Epic**: Trajectory Visualization
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Core
 > **Type**: Logic
 > **Manifest Version**: 2026-05-11
@@ -117,7 +117,16 @@ The aim line direction test: if `drag_end` is to the right of `anchor` (drag_end
 **Story Type**: Logic
 **Required evidence**: `tests/unit/trajectory_visualization/aim_line_test.gd` — must exist and pass
 
-**Status**: [ ] Not yet created
+**Status**: [x] `tests/unit/trajectory_visualization/aim_line_test.gd` — 13 test functions
+
+---
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 5/5 passing (all ACs verified via unit tests)
+**Deviations**: None — Line2D created in _ready (Story 003 adds colors/opacity)
+**Test Evidence**: `tests/unit/trajectory_visualization/aim_line_test.gd` — 13 test functions
+**Code Review**: CONCERNS resolved — test names corrected, y≥0 clamp test added, coupling comment added
 
 ---
 
