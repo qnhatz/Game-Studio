@@ -166,3 +166,20 @@ func test_gesture_filtering_corridor_for_p2_discards_drag() -> void:
 	_open_p2()
 	_system._on_pointer_down(-1, Vector2(400.0, 200.0))
 	assert_bool(_system._dragging).is_false()
+
+
+# ---------------------------------------------------------------------------
+# Canvas bottom edge — GESTURE_RECT end.y = 450, excluded by has_point
+# ---------------------------------------------------------------------------
+
+func test_gesture_filtering_last_valid_row_y449_accepts_drag() -> void:
+	_open_p1()
+	_geometry_stub.anchor = Vector2(160.0, 449.0)
+	_system._on_pointer_down(-1, Vector2(160.0, 449.0))
+	assert_bool(_system._dragging).is_true()
+
+
+func test_gesture_filtering_canvas_bottom_y450_discards_drag() -> void:
+	_open_p1()
+	_system._on_pointer_down(-1, Vector2(160.0, 450.0))
+	assert_bool(_system._dragging).is_false()
