@@ -24,9 +24,29 @@ var _canvas_size: Vector2 = Vector2(ScreenLayout.CANVAS_W, ScreenLayout.CANVAS_H
 ## class names once those stories are complete.
 var _figure_geometry: Node = null
 var _two_action_turn_system: Node = null
+## CanvasLayer at Layer 20; injected via @onready in production, set directly in tests.
+var _orientation_gate: Node = null
+
+
+## Called by TwoActionTurnSystem when it is ready to receive a human action.
+func open_window(player_id: int) -> void:
+	_active_player_id = player_id
+	_window_open = true
+	_touch_id = -1
+	_dragging = false
+
+
+## Called by TwoActionTurnSystem on halt() or AI turn start.
+func close_window() -> void:
+	_window_open = false
+	_dragging = false
+	_touch_id = -1
+	aim_cancelled.emit()
 
 
 func _input(event: InputEvent) -> void:
+	if _orientation_gate != null and _orientation_gate.visible:
+		return
 	if not _window_open:
 		return
 	if event is InputEventScreenTouch:
