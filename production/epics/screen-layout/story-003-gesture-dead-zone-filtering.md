@@ -1,7 +1,7 @@
 # Story 003: Gesture Region Dead-Zone Filtering
 
 > **Epic**: Screen Layout
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Foundation
 > **Type**: Integration
 > **Manifest Version**: 2026-05-11
@@ -117,3 +117,12 @@ Do not add a separate Corridor membership check — the zone membership check al
 
 - Depends on: Story 002 must be DONE (`GESTURE_RECT` must exist); InputSystem epic (input-system) story providing `_on_pointer_down` must be DONE or in progress
 - Unlocks: Story 004 (orientation gate is another discard condition layered on top of this)
+
+---
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 4/4 passing
+**Deviations**: None
+**Test Evidence**: `tests/integration/screen_layout/gesture_filtering_test.gd` — 15 test functions covering AC-1–AC-4 plus bottom-edge boundary pair added from code review
+**Code Review**: Complete (APPROVED WITH SUGGESTIONS — y=449/450 boundary tests added)
