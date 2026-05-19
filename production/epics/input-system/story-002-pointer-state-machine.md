@@ -1,7 +1,7 @@
 # Story 002: InputSystem Pointer State Machine
 
 > **Epic**: Input System
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Foundation
 > **Type**: Logic
 > **Estimate**: 3 hours
@@ -199,3 +199,12 @@ The `open_window()` and `close_window()` methods belong to Story 003 (window pro
 
 - Depends on: Story 001 (FlickEvent must be DONE — `InputSystem._on_pointer_up()` constructs `FlickEvent.new()`)
 - Unlocks: Story 003 (window protocol wraps this state machine); screen-layout Story 003 (dead-zone filtering uses `InputSystem` signals)
+
+---
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 6/6 passing
+**Deviations**: ADVISORY — `_figure_geometry` / `_two_action_turn_system` typed as `Node` with external injection rather than `@onready`; intentional pending concrete class creation (Story 003+)
+**Test Evidence**: `tests/unit/input_system/input_system_pointer_test.gd` — 16 test functions covering all 6 ACs
+**Code Review**: Skipped — Lean mode

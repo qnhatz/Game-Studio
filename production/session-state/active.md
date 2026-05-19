@@ -73,9 +73,9 @@
 - Accessibility: Standard tier (colorblind modes + scalable UI)
 
 <!-- STATUS -->
-Epic: Screen Layout
-Feature: ScreenLayout Constants
-Task: Code review and story close
+Epic: Input System
+Feature: Pointer State Machine
+Task: Story 003 — Window Protocol
 <!-- /STATUS -->
 
 ## Session Extract — /dev-story 2026-05-15
@@ -84,3 +84,9 @@ Task: Code review and story close
 - Test written: tests/unit/screen_layout/screen_layout_constants_test.gd (6 test functions)
 - Blockers: None
 - Next: /code-review src/systems/screen_layout.gd tests/unit/screen_layout/screen_layout_constants_test.gd then /story-done production/epics/screen-layout/story-001-screen-layout-constants.md
+
+## Session Extract — /story-done 2026-05-19
+- Verdict: COMPLETE WITH NOTES
+- Story: production/epics/input-system/story-002-pointer-state-machine.md — InputSystem Pointer State Machine
+- Tech debt logged: None (advisory deviation documented inline — @onready deferred pending concrete classes)
+- Next recommended: production/epics/input-system/story-003-window-protocol.md
