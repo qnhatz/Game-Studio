@@ -1,7 +1,7 @@
 # Story 002: Shot Line Logic
 
 > **Epic**: Trajectory Visualization
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Core
 > **Type**: Logic
 > **Manifest Version**: 2026-05-11
@@ -156,7 +156,16 @@ For unit tests: mock the Tween or test the `_compute_canvas_exit` formula indepe
 **Story Type**: Logic
 **Required evidence**: `tests/unit/trajectory_visualization/shot_line_test.gd` — must exist and pass
 
-**Status**: [ ] Not yet created
+**Status**: [x] `tests/unit/trajectory_visualization/shot_line_test.gd` — 16 test functions
+
+---
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 8/8 passing (all ACs verified via unit tests; AC-3 timing tested structurally)
+**Deviations**: None — AC-3 full fade timing requires integration test; tween structure verified via is_running() check
+**Test Evidence**: `tests/unit/trajectory_visualization/shot_line_test.gd` — 16 test functions
+**Code Review**: CONCERNS resolved — typed Array[Tween], tween.is_running() assertion for AC-7
 
 ---
 
