@@ -4,7 +4,7 @@
 > **GDD**: design/gdd/movement.md
 > **Architecture Module**: `Movement`
 > **Status**: Ready
-> **Stories**: Not yet created — run `/create-stories movement`
+> **Stories**: 2 stories created
 
 ## Overview
 
@@ -41,6 +41,13 @@ This epic is complete when:
 - All Logic and Integration stories have passing test files in `tests/`
 - All Visual/Feel and UI stories have evidence docs with sign-off in `production/qa/evidence/`
 
+## Stories
+
+| # | Story | Type | Status | ADR |
+|---|-------|------|--------|-----|
+| 001 | Anchor Clamping Logic | Logic | Ready | ADR-0004 |
+| 002 | Tap-vs-Drag Disambiguation | Integration | Ready | ADR-0007 |
+
 ## Next Step
 
-Run `/create-stories movement` to break this epic into implementable stories.
+Run `/story-readiness production/epics/movement/story-001-anchor-clamping.md` then `/dev-story` to begin implementation.

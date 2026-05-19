@@ -4,7 +4,7 @@
 > **GDD**: design/gdd/action-validation.md
 > **Architecture Module**: `ActionValidation`
 > **Status**: Ready
-> **Stories**: Not yet created — run `/create-stories action-validation`
+> **Stories**: 1 story created
 
 ## Overview
 
@@ -39,6 +39,12 @@ This epic is complete when:
 - All Logic and Integration stories have passing test files in `tests/`
 - All Visual/Feel and UI stories have evidence docs with sign-off in `production/qa/evidence/`
 
+## Stories
+
+| # | Story | Type | Status | ADR |
+|---|-------|------|--------|-----|
+| 001 | ActionValidation Logic | Logic | Ready | ADR-0004 |
+
 ## Next Step
 
-Run `/create-stories action-validation` to break this epic into implementable stories.
+Run `/story-readiness production/epics/action-validation/story-001-validation-logic.md` then `/dev-story` to begin implementation.

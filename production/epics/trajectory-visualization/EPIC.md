@@ -4,7 +4,7 @@
 > **GDD**: design/gdd/trajectory-visualization.md
 > **Architecture Module**: `TrajectoryVisualization`
 > **Status**: Ready
-> **Stories**: Not yet created — run `/create-stories trajectory-visualization`
+> **Stories**: 3 stories created
 
 ## Overview
 
@@ -48,6 +48,14 @@ This epic is complete when:
   stored Tween reference — verify in code review before closing the freeze() story
 - All Visual/Feel and UI stories have evidence docs with sign-off in `production/qa/evidence/`
 
+## Stories
+
+| # | Story | Type | Status | ADR |
+|---|-------|------|--------|-----|
+| 001 | Aim Line Logic | Logic | Ready | ADR-0003, ADR-0007 |
+| 002 | Shot Line Logic | Logic | Ready | ADR-0003, ADR-0001 |
+| 003 | Visual Rendering and Lifecycle | Visual/Feel | Ready | ADR-0003, ADR-0001 |
+
 ## Next Step
 
-Run `/create-stories trajectory-visualization` to break this epic into implementable stories.
+Run `/story-readiness production/epics/trajectory-visualization/story-001-aim-line-logic.md` then `/dev-story` to begin implementation.

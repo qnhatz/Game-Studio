@@ -4,7 +4,7 @@
 > **GDD**: design/gdd/shot-spread-calculation.md
 > **Architecture Module**: `ShotSpreadCalculation` (+ `RngService` Autoload — inferred Foundation module)
 > **Status**: Ready
-> **Stories**: Not yet created — run `/create-stories shot-spread-calculation`
+> **Stories**: 2 stories created
 
 ## Overview
 
@@ -45,6 +45,13 @@ This epic is complete when:
   in this epic or the AI layer can be picked up
 - All Visual/Feel and UI stories have evidence docs with sign-off in `production/qa/evidence/`
 
+## Stories
+
+| # | Story | Type | Status | ADR |
+|---|-------|------|--------|-----|
+| 001 | RngService Autoload | Logic | Ready | ADR-0006 |
+| 002 | ShotSpreadCalculation.apply_spread() | Logic | Ready | ADR-0004, ADR-0006, ADR-0009 |
+
 ## Next Step
 
-Run `/create-stories shot-spread-calculation` to break this epic into implementable stories.
+Run `/story-readiness production/epics/shot-spread-calculation/story-001-rng-service.md` then `/dev-story` to begin implementation.

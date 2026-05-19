@@ -4,7 +4,7 @@
 > **GDD**: design/gdd/figure-geometry.md
 > **Architecture Module**: `FigureGeometry`
 > **Status**: Ready
-> **Stories**: Not yet created — run `/create-stories figure-geometry`
+> **Stories**: 2 stories created
 
 ## Overview
 
@@ -43,6 +43,13 @@ This epic is complete when:
 - All Logic and Integration stories have passing test files in `tests/`
 - All Visual/Feel and UI stories have evidence docs with sign-off in `production/qa/evidence/`
 
+## Stories
+
+| # | Story | Type | Status | ADR |
+|---|-------|------|--------|-----|
+| 001 | Zone Accessors and Anchor Management | Logic | Ready | ADR-0005, ADR-0001 |
+| 002 | Ray Intersection Tests | Logic | Ready | ADR-0005 |
+
 ## Next Step
 
-Run `/create-stories figure-geometry` to break this epic into implementable stories.
+Run `/story-readiness production/epics/figure-geometry/story-001-zone-accessors.md` then `/dev-story` to begin implementation.
