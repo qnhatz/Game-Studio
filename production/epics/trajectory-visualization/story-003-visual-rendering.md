@@ -1,7 +1,7 @@
 # Story 003: Visual Rendering and Lifecycle
 
 > **Epic**: Trajectory Visualization
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Core
 > **Type**: Visual/Feel
 > **Manifest Version**: 2026-05-11
@@ -106,7 +106,16 @@ func set_active_player(player_id: int) -> void:
 **Story Type**: Visual/Feel
 **Required evidence**: `production/qa/evidence/trajectory-visualization-evidence.md` + sign-off
 
-**Status**: [ ] Not yet created
+**Status**: [x] `production/qa/evidence/trajectory-visualization-evidence.md` — pending browser sign-off
+
+---
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 4/4 ACs implemented; visual verification pending browser run
+**Deviations**: None — P1/P2 colors, LINE_WIDTH, AIM_LINE_ALPHA per art bible
+**Test Evidence**: `production/qa/evidence/trajectory-visualization-evidence.md`
+**Code Review**: Lean mode — no LP gate; constants verified against art bible spec
 
 ---
 
