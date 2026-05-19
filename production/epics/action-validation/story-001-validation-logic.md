@@ -1,7 +1,7 @@
 # Story 001: ActionValidation Logic
 
 > **Epic**: Action Validation
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Core
 > **Type**: Logic
 > **Manifest Version**: 2026-05-11
@@ -115,7 +115,16 @@ Use `StringName` literals (`&"FIRE"`, `&"MOVE"`) throughout — never plain stri
 **Story Type**: Logic
 **Required evidence**: `tests/unit/action_validation/action_validation_test.gd` — must exist and pass
 
-**Status**: [ ] Not yet created
+**Status**: [x] `tests/unit/action_validation/action_validation_test.gd` — 12 test functions
+
+---
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 8/8 passing (all ACs verified via unit tests)
+**Deviations**: None
+**Test Evidence**: `tests/unit/action_validation/action_validation_test.gd` — 12 test functions
+**Code Review**: CONCERNS resolved — queue_free in teardown, null assert added to get_valid_actions
 
 ---
 
