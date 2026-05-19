@@ -9,6 +9,7 @@ signal aim_cancelled
 const FIGURE_DRAG_RADIUS_PX: float = 48.0
 const MAX_DRAG_PX: float = 150.0
 const MIN_POWER: float = 0.05
+const TAP_MOVE_RADIUS_PX: float = 12.0
 
 var _window_open: bool = false
 var _active_player_id: int = -1
@@ -103,6 +104,9 @@ func _on_pointer_up(pos: Vector2) -> void:
 	_window_open = false
 	var clamped := pos.clamp(Vector2.ZERO, _canvas_size)
 	var dist := (_drag_start - clamped).length()
+	if dist < TAP_MOVE_RADIUS_PX:
+		_two_action_turn_system.on_move_tapped(_active_player_id, clamped)
+		return
 	var power := clampf(dist / MAX_DRAG_PX, 0.0, 1.0)
 	if power < MIN_POWER:
 		aim_cancelled.emit()
