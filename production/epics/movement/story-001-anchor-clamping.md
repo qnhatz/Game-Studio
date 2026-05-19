@@ -1,7 +1,7 @@
 # Story 001: Anchor Clamping Logic
 
 > **Epic**: Movement
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Core
 > **Type**: Logic
 > **Manifest Version**: 2026-05-11
@@ -110,7 +110,16 @@ For unit tests, inject a mock `FigureGeometry` with a `set_anchor` method that r
 **Story Type**: Logic
 **Required evidence**: `tests/unit/movement/movement_anchor_clamping_test.gd` — must exist and pass
 
-**Status**: [ ] Not yet created
+**Status**: [x] `tests/unit/movement/movement_anchor_clamping_test.gd` — 10 test functions
+
+---
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 6/6 passing (all ACs verified via unit tests)
+**Deviations**: None — `assert` replaced with `push_error` + early return for release safety
+**Test Evidence**: `tests/unit/movement/movement_anchor_clamping_test.gd` — 10 test functions
+**Code Review**: CONCERNS resolved — AC-1 y-assertion added, AC-5 properly isolates within-1px scenario, AAA comments added
 
 ---
 
