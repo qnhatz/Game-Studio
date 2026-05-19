@@ -1,7 +1,7 @@
 # Story 002: Tap-vs-Drag Disambiguation
 
 > **Epic**: Movement
-> **Status**: Ready
+> **Status**: Complete
 > **Layer**: Core
 > **Type**: Integration
 > **Manifest Version**: 2026-05-11
@@ -101,7 +101,16 @@ The integration test mocks `TwoActionTurnSystem` to capture which method was cal
 **Story Type**: Integration
 **Required evidence**: `tests/integration/movement/tap_disambiguation_test.gd` — must exist and pass
 
-**Status**: [ ] Not yet created
+**Status**: [x] `tests/integration/movement/tap_disambiguation_test.gd` — 6 test functions
+
+---
+
+## Completion Notes
+**Completed**: 2026-05-19
+**Criteria**: 3/3 passing (AC-1 short tap routes to MOVE, AC-2 long drag routes to FIRE, AC-3 full routing chain updates anchor same-frame)
+**Deviations**: None — AC-3 test drives through full InputSystem → MockTurnSystem → Movement → FigureGeometry chain
+**Test Evidence**: `tests/integration/movement/tap_disambiguation_test.gd` — 6 test functions
+**Code Review**: CONCERNS resolved — AC-3 test rewritten to exercise full routing chain
 
 ---
 
