@@ -1,10 +1,17 @@
 # Session State — Flick Duel
 
-*Last updated: 2026-05-15*
+*Last updated: 2026-05-19*
 
 ## Current Task
 
-**Implementing screen-layout epic stories.** Story 001 (ScreenLayout Constants) implemented and committed. Next: `/code-review` then `/story-done`, then Story 002.
+**Implementing input-system epic.** Story 001 (FlickEvent) implemented. Next: `/code-review src/systems/flick_event.gd tests/unit/input_system/flick_event_test.gd` then `/story-done`.
+
+## Session Extract — /dev-story 2026-05-19
+- Story: production/epics/input-system/story-001-flick-event.md — FlickEvent Value Object
+- Files changed: src/systems/flick_event.gd (created), tests/unit/input_system/flick_event_test.gd (created, 9 test functions)
+- Test written: tests/unit/input_system/flick_event_test.gd
+- Blockers: None
+- Next: /code-review src/systems/flick_event.gd tests/unit/input_system/flick_event_test.gd then /story-done production/epics/input-system/story-001-flick-event.md
 
 ## Status
 
